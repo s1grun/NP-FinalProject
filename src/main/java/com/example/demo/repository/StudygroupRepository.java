@@ -1,4 +1,14 @@
 package com.example.demo.repository;
 
-public class StudygroupRepository {
+
+import com.example.demo.entity.StudygroupEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Repository
+@Transactional
+public interface StudygroupRepository extends JpaRepository<StudygroupEntity, List> {
 }
