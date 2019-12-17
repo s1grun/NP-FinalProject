@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.domain;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -7,7 +7,7 @@ import java.util.Objects;
 @Table(name = "list", schema = "public", catalog = "postgres")
 public class ListEntity {
     private int listId;
-    private String username;
+    private String listname;
     private String owner;
     private String collaborators;
     private String listitem;
@@ -15,6 +15,7 @@ public class ListEntity {
     private String assignee;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "listID", nullable = false)
     public int getListId() {
         return listId;
@@ -25,13 +26,13 @@ public class ListEntity {
     }
 
     @Basic
-    @Column(name = "username", nullable = false, length = -1)
+    @Column(name = "listname", nullable = false, length = -1)
     public String getUsername() {
-        return username;
+        return listname;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.listname = username;
     }
 
     @Basic
@@ -90,7 +91,7 @@ public class ListEntity {
         if (o == null || getClass() != o.getClass()) return false;
         ListEntity that = (ListEntity) o;
         return listId == that.listId &&
-                Objects.equals(username, that.username) &&
+                Objects.equals(listname, that.listname) &&
                 Objects.equals(owner, that.owner) &&
                 Objects.equals(collaborators, that.collaborators) &&
                 Objects.equals(listitem, that.listitem) &&
@@ -100,6 +101,6 @@ public class ListEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(listId, username, owner, collaborators, listitem, content, assignee);
+        return Objects.hash(listId, listname, owner, collaborators, listitem, content, assignee);
     }
 }

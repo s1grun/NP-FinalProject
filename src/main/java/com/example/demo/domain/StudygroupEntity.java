@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.domain;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -9,23 +9,24 @@ import java.util.Set;
 public class StudygroupEntity {
     private int groupid;
     private String groupname;
-
-    @ManyToMany(targetEntity = UserEntity.class)
-    private Set userSet;
+//
+//    @ManyToMany(targetEntity = UserEntity.class)
+//    private Set userSet;
 
     public StudygroupEntity() {
         super();
     }
 
 
-    public StudygroupEntity(int groupid, String groupname, Set userSet){
+    public StudygroupEntity(int groupid, String groupname){
         super();
         this.groupid = groupid;
         this.groupname = groupname;
-        this.userSet = userSet;
+//        this.userSet = userSet;
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "groupid", nullable = false)
     public int getGroupid() {
         return groupid;
@@ -54,13 +55,13 @@ public class StudygroupEntity {
                 Objects.equals(groupname, that.groupname);
     }
 
-    public Set getUserSet() {
-        return userSet;
-    }
-
-    public void setUserSet(Set userSet) {
-        this.userSet = userSet;
-    }
+//    public Set getUserSet() {
+//        return userSet;
+//    }
+//
+//    public void setUserSet(Set userSet) {
+//        this.userSet = userSet;
+//    }
 
     @Override
     public int hashCode() {

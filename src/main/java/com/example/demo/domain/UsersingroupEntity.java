@@ -1,9 +1,6 @@
-package com.example.demo.entity;
+package com.example.demo.domain;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -44,5 +41,16 @@ public class UsersingroupEntity {
     @Override
     public int hashCode() {
         return Objects.hash(userid, groupid);
+    }
+
+    private String id;
+
+    @Id
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
