@@ -1,8 +1,10 @@
 package com.example.demo.domain;
 
-public interface ListDTO {
+import java.util.List;
+
+public interface ListDTO{
     String getListname();
     String getOwner();
-    String getListItem();
+    String getListitem();
     String getCollaborators();
 }

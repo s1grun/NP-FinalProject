@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "list", schema = "public", catalog = "postgres")
-public class ListEntity {
+public class ListEntity implements ListDTO{
     private int listId;
     private String listname;
     private String owner;
@@ -13,6 +13,14 @@ public class ListEntity {
     private String listitem;
     private String content;
     private String assignee;
+
+    public ListEntity(String listname, String owner) {
+        this.listname = listname;
+        this.owner = owner;
+    }
+
+    public ListEntity() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +35,12 @@ public class ListEntity {
 
     @Basic
     @Column(name = "listname", nullable = false, length = -1)
-    public String getUsername() {
+    public String getListname() {
         return listname;
     }
 
-    public void setUsername(String username) {
-        this.listname = username;
+    public void setListname(String listname) {
+        this.listname = listname;
     }
 
     @Basic
