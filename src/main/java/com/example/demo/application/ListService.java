@@ -21,12 +21,12 @@ public class ListService {
 
     public ListDTO getByName(String listname){
 
-        return listRepository.getListEntityByListname(listname);
+        return listRepository.getByListname(listname);
     }
 
-    public ListEntity createList(String listname, String owner){
-
-        return listRepository.save(new ListEntity(listname,owner));
+    public ListEntity createList(String listname){
+        System.out.println("Listname" + listname);
+        return listRepository.save(new ListEntity(listname));
     }
 
 }

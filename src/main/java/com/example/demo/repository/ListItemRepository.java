@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.domain.ListDTO;
-import com.example.demo.domain.ListEntity;
+import com.example.demo.domain.ListItemDTO;
+import com.example.demo.domain.ListitemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
-public interface ListRepository extends JpaRepository<ListEntity, List> {
-//    ListDTO getListEntityByListname(String listname);
-    ListDTO getByListname(String listname);
-//    ListDTO getAllByListname();
+public interface ListItemRepository extends JpaRepository<ListitemEntity, List> {
+    ListItemDTO getByListid(int listid);
+    //ListItemDTO getListItemDTOByListid(int listid);
+    ListItemDTO getByContent(String content);
 }

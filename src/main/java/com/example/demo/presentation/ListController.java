@@ -1,20 +1,15 @@
 package com.example.demo.presentation;
 
+import com.example.demo.application.ListItemService;
 import com.example.demo.application.ListService;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.ListDTO;
-import com.example.demo.domain.ListEntity;
-import com.example.demo.domain.UserEntity;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.example.demo.domain.ListItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import org.springframework.ui.Model;
-
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -23,36 +18,62 @@ public class ListController {
     private UserService userService;
     @Autowired
     private ListService listService;
+    @Autowired
+    private ListItemService listItemService;
 
     @GetMapping("/login")
-    public String showLoginForm(){
+    public String showLoginForm() {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String loginUser(@Valid UserEntity userEntity, BindingResult result, Model model) throws Exception{
-        UserEntity userloggedIn = null;
-        try {
-            userloggedIn = userService.login(userEntity);
-        } catch (Exception ex) {
-            throw new Exception();
+//    @PostMapping("/login")
+//    public String loginUser(@Valid UserEntity userEntity, BindingResult result, Model model) throws Exception{
+//        UserEntity userloggedIn = null;
+//        try {
+//            userloggedIn = userService.login(userEntity);
+//        } catch (Exception ex) {
+//            throw new Exception();
+//        }
+//
+//        model.addAttribute("username", userloggedIn.getName());
+//        model.addAttribute("userId", userloggedIn.getUserId());
+//
+//        return returnTo("list-view", model);
+//    }
+
+//    @GetMapping ("/")
+//    public String getLists(){
+//        List<? extends ListDTO> allLists = listService.getAllLists();
+////        model.addAttribute("allLists", allLists);
+//
+//        return "index";
+//    }
+
+    @RequestMapping("/lists")
+    public List<ListDTO> getLists() {
+        return (List<ListDTO>) listService.getAllLists();
+    }
+
+    @RequestMapping(value = "/addList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ListDTO> newList(@RequestBody AddLists addLists) throws URISyntaxException {
+        String listname = addLists.getName();
+        if (listService.getByName(listname) == null) {
+            listService.createList(listname);
         }
-
-        model.addAttribute("username", userloggedIn.getName());
-        model.addAttribute("userId", userloggedIn.getUserId());
-
-        return returnTo("list-view", model);
+        return (List<ListDTO>) listService.getAllLists();
     }
 
-    @PostMapping("/lists")
-    public String lists(ListEntity listEntity, Model model){
-        List<? extends ListDTO> allLists = listService.getAllLists();
-        model.addAttribute("to-do list", allLists);
-        return "index";
+    @RequestMapping("/listItems")
+    public List<ListItemDTO> getListItems() {
+        return (List<ListItemDTO>) listItemService.getAllItems();
     }
 
-    private String returnTo(String page, Model model){
-        return "index";
+    @RequestMapping(value = "/addListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ListItemDTO> newList(@RequestBody AddListItem addListItem) throws URISyntaxException {
+        String content = addListItem.getContent();
+        if(listItemService.getListItemDTOByContent(content) == null) {
+            listItemService.createListitem(content);
+        }
+        return (List<ListItemDTO>) listItemService.getAllItems();
     }
-
 }

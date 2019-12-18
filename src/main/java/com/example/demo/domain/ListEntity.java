@@ -6,17 +6,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "list", schema = "public", catalog = "postgres")
 public class ListEntity implements ListDTO{
-    private int listId;
+    private int listid;
     private String listname;
     private String owner;
     private String collaborators;
-    private String listitem;
-    private String content;
-    private String assignee;
 
-    public ListEntity(String listname, String owner) {
+    public ListEntity(String listname) {
         this.listname = listname;
-        this.owner = owner;
     }
 
     public ListEntity() {
@@ -24,13 +20,13 @@ public class ListEntity implements ListDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "listID", nullable = false)
-    public int getListId() {
-        return listId;
+    @Column(name = "listid", nullable = false)
+    public int getListid() {
+        return listid;
     }
 
-    public void setListId(int listId) {
-        this.listId = listId;
+    public void setListid(int listid) {
+        this.listid = listid;
     }
 
     @Basic
@@ -44,7 +40,7 @@ public class ListEntity implements ListDTO{
     }
 
     @Basic
-    @Column(name = "owner", nullable = false, length = -1)
+    @Column(name = "owner", nullable = true, length = -1)
     public String getOwner() {
         return owner;
     }
@@ -54,7 +50,7 @@ public class ListEntity implements ListDTO{
     }
 
     @Basic
-    @Column(name = "collaborators", nullable = false, length = -1)
+    @Column(name = "collaborators", nullable = true, length = -1)
     public String getCollaborators() {
         return collaborators;
     }
@@ -63,52 +59,19 @@ public class ListEntity implements ListDTO{
         this.collaborators = collaborators;
     }
 
-    @Basic
-    @Column(name = "listitem", nullable = false, length = -1)
-    public String getListitem() {
-        return listitem;
-    }
-
-    public void setListitem(String listitem) {
-        this.listitem = listitem;
-    }
-
-    @Basic
-    @Column(name = "content", nullable = false, length = -1)
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    @Basic
-    @Column(name = "assignee", nullable = true, length = -1)
-    public String getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(String assignee) {
-        this.assignee = assignee;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListEntity that = (ListEntity) o;
-        return listId == that.listId &&
+        return listid == that.listid &&
                 Objects.equals(listname, that.listname) &&
                 Objects.equals(owner, that.owner) &&
-                Objects.equals(collaborators, that.collaborators) &&
-                Objects.equals(listitem, that.listitem) &&
-                Objects.equals(content, that.content) &&
-                Objects.equals(assignee, that.assignee);
+                Objects.equals(collaborators, that.collaborators);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(listId, listname, owner, collaborators, listitem, content, assignee);
+        return Objects.hash(listid, listname, owner, collaborators);
     }
 }
