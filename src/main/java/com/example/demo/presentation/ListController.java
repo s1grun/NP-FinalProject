@@ -6,6 +6,8 @@ import com.example.demo.application.UserService;
 import com.example.demo.domain.ListDTO;
 import com.example.demo.domain.ListItemDTO;
 import com.example.demo.domain.ListitemEntity;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -51,15 +53,24 @@ public class ListController {
 //    }
 
     @RequestMapping("/lists")
-    public List<ListDTO> getLists() {
+    public String getLists() {
        List<? extends ListDTO> allLists = listService.getAllLists();
+
+
+        JSONArray lists_res = new JSONArray();
 //       int listid;
 //
-//       for (int i = 0; i < allLists.size(); i++) {
-//           List<? extends ListItemDTO> res =listItemService.getListItemDTOByListid(allLists.get(i).getListid());
-//           allLists.get(i).
-//       }
-        return (List<ListDTO>) allLists;
+       for (int i = 0; i < allLists.size(); i++) {
+
+           ListDTO item= allLists.get(i);
+           System.out.println(item.toString());
+           JSONObject temp = new JSONObject(item);
+           System.out.println(temp.toString());
+           List<? extends ListItemDTO> res =listItemService.getListItemDTOByListid(item.getListid());
+           temp.put("items",res);
+           lists_res.put(temp);
+       }
+        return  lists_res.toString();
 
     }
 
