@@ -94,4 +94,15 @@ public class ListController {
         }
         return (List<ListItemDTO>) listItemService.getAllItems();
     }
+
+    @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
+        int itemid = addListItem.getItemid();
+        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
+
+        if (listItemDTO != null) {
+            listItemService.deleteListitem((ListitemEntity) listItemDTO);
+        }
+        return (List<ListItemDTO>) listItemService.getAllItems();
+    }
 }

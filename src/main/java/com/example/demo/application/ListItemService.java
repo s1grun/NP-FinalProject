@@ -40,4 +40,8 @@ public class ListItemService {
     public ListitemEntity editListitem(ListitemEntity listItem) {
         return listItemRepository.save(listItem);
     }
+
+//    public ListitemEntity deleteListitem(ListitemEntity itemid) {
+//        return listItemRepository.deleteByItemid(itemid);
+//    }
 }
