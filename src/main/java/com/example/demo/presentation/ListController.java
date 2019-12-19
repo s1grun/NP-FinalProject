@@ -5,6 +5,7 @@ import com.example.demo.application.ListService;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.ListDTO;
 import com.example.demo.domain.ListItemDTO;
+import com.example.demo.domain.ListitemEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -69,10 +70,27 @@ public class ListController {
     }
 
     @RequestMapping(value = "/addListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListItemDTO> newList(@RequestBody AddListItem addListItem) throws URISyntaxException {
+    public List<ListItemDTO> newListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
         String content = addListItem.getContent();
         if(listItemService.getListItemDTOByContent(content) == null) {
             listItemService.createListitem(content);
+        }
+        return (List<ListItemDTO>) listItemService.getAllItems();
+    }
+
+    @RequestMapping(value = "/updateListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ListItemDTO> updateListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
+        String content = addListItem.getContent();
+        int itemid = addListItem.getItemid();
+        int status = addListItem.getStatus();
+        String assignee = addListItem.getAssignee();
+        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
+
+        if (listItemDTO != null) {
+            listItemDTO.setContent(content);
+            listItemDTO.setStatus(status);
+            listItemDTO.setAssignee(assignee);
+            listItemService.editListitem((ListitemEntity) listItemDTO);
         }
         return (List<ListItemDTO>) listItemService.getAllItems();
     }

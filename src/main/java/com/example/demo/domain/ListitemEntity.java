@@ -8,8 +8,11 @@ import java.util.Objects;
 public class ListitemEntity implements ListItemDTO{
     private int itemid;
     private String content;
-    private String status;
+    private int status;
     private int listid;
+    private String assignee;
+    private String locationid;
+    private String location;
 
     public ListitemEntity(String content) {
         this.content = content;
@@ -19,7 +22,6 @@ public class ListitemEntity implements ListItemDTO{
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemid", nullable = false)
     public int getItemid() {
         return itemid;
@@ -40,12 +42,12 @@ public class ListitemEntity implements ListItemDTO{
     }
 
     @Basic
-    @Column(name = "status", nullable = true, length = -1)
-    public String getStatus() {
+    @Column(name = "status", nullable = true)
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -59,19 +61,52 @@ public class ListitemEntity implements ListItemDTO{
         this.listid = listid;
     }
 
+    @Basic
+    @Column(name = "assignee", nullable = true, length = -1)
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    @Basic
+    @Column(name = "locationid", nullable = true, length = -1)
+    public String getLocationid() {
+        return locationid;
+    }
+
+    public void setLocationid(String locationid) {
+        this.locationid = locationid;
+    }
+
+    @Basic
+    @Column(name = "location", nullable = true, length = -1)
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListitemEntity that = (ListitemEntity) o;
         return itemid == that.itemid &&
-                listid == that.listid &&
                 Objects.equals(content, that.content) &&
-                Objects.equals(status, that.status);
+                Objects.equals(status, that.status) &&
+                Objects.equals(listid, that.listid) &&
+                Objects.equals(assignee, that.assignee) &&
+                Objects.equals(locationid, that.locationid) &&
+                Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemid, content, status, listid);
+        return Objects.hash(itemid, content, status, listid, assignee, locationid, location);
     }
 }

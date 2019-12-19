@@ -2,6 +2,11 @@ package com.example.demo.domain;
 
 public interface ListItemDTO {
     String getContent();
-    String getStatus();
+    int getStatus();
+    String getAssignee();
     int getListid();
+    void setContent(String content);
+    void setStatus(int status);
+    void setAssignee(String assignee);
+
 }

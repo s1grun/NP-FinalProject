@@ -8,6 +8,6 @@ public class AddLists {
     }
 
     public void setName(String name) {
-        this.name = name.toUpperCase();
+        this.name = name;
     }
 }

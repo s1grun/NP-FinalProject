@@ -32,4 +32,12 @@ public class ListItemService {
         System.out.println("content" + content);
         return listItemRepository.save(new ListitemEntity(content));
     }
+
+    public ListItemDTO findListitemByItemid(int itemid) {
+        return listItemRepository.findByItemid(itemid);
+    }
+
+    public ListitemEntity editListitem(ListitemEntity listItem) {
+        return listItemRepository.save(listItem);
+    }
 }
