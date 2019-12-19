@@ -1,7 +1,9 @@
 package com.example.demo.domain;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "list", schema = "public", catalog = "postgres")
@@ -28,6 +30,9 @@ public class ListEntity implements ListDTO{
     public void setListid(int listid) {
         this.listid = listid;
     }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "listEntity")
+    private Set<ListitemEntity> listitemEntities;
 
     @Basic
     @Column(name = "listname", nullable = false, length = -1)

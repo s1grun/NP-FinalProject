@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
 public interface ListItemRepository extends JpaRepository<ListitemEntity, List> {
-    ListItemDTO getByListid(int listid);
+    List<? extends ListItemDTO> getByListid(int listid);
     //ListItemDTO getListItemDTOByListid(int listid);
     ListItemDTO getByContent(String content);
     ListItemDTO getByItemid(int itemid);

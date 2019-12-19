@@ -19,7 +19,7 @@ public class ListItemService {
         return listItemRepository.findAll();
     }
 
-    public ListItemDTO getListItemDTOByListid(int listid){
+    public List<? extends ListItemDTO> getListItemDTOByListid(int listid){
 
         return listItemRepository.getByListid(listid);
     }

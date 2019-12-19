@@ -6,4 +6,5 @@ public interface ListDTO{
     String getListname();
     String getOwner();
     String getCollaborators();
+    int getListid();
 }

@@ -52,7 +52,15 @@ public class ListController {
 
     @RequestMapping("/lists")
     public List<ListDTO> getLists() {
-        return (List<ListDTO>) listService.getAllLists();
+       List<? extends ListDTO> allLists = listService.getAllLists();
+//       int listid;
+//
+//       for (int i = 0; i < allLists.size(); i++) {
+//           List<? extends ListItemDTO> res =listItemService.getListItemDTOByListid(allLists.get(i).getListid());
+//           allLists.get(i).
+//       }
+        return (List<ListDTO>) allLists;
+
     }
 
     @RequestMapping(value = "/addList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -95,14 +103,14 @@ public class ListController {
         return (List<ListItemDTO>) listItemService.getAllItems();
     }
 
-    @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
-        int itemid = addListItem.getItemid();
-        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
-
-        if (listItemDTO != null) {
-            listItemService.deleteListitem((ListitemEntity) listItemDTO);
-        }
-        return (List<ListItemDTO>) listItemService.getAllItems();
-    }
+//    @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
+//        int itemid = addListItem.getItemid();
+//        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
+//
+//        if (listItemDTO != null) {
+//            listItemService.deleteListitem((ListitemEntity) listItemDTO);
+//        }
+//        return (List<ListItemDTO>) listItemService.getAllItems();
+//    }
 }

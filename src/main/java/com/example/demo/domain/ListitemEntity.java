@@ -51,6 +51,11 @@ public class ListitemEntity implements ListItemDTO{
         this.status = status;
     }
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "listid")
+    private ListEntity listEntity;
+
     @Basic
     @Column(name = "listid", nullable = true)
     public int getListid() {

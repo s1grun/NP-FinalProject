@@ -15,4 +15,6 @@ public interface ListRepository extends JpaRepository<ListEntity, List> {
 //    ListDTO getListEntityByListname(String listname);
     ListDTO getByListname(String listname);
 //    ListDTO getAllByListname();
+    ListDTO getByListid(int listid);
+    List<ListEntity> findAll();
 }

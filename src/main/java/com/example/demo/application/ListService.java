@@ -16,6 +16,7 @@ public class ListService {
     private ListRepository listRepository;
 
     public List<? extends ListDTO> getAllLists(){
+//        return listRepository.findAll();
         return listRepository.findAll();
     }
 
@@ -27,6 +28,10 @@ public class ListService {
     public ListEntity createList(String listname){
         System.out.println("Listname" + listname);
         return listRepository.save(new ListEntity(listname));
+    }
+
+    public ListDTO getListByListid(int listid) {
+        return listRepository.getByListid(listid);
     }
 
 }
