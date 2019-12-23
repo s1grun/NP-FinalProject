@@ -12,6 +12,8 @@ var input_option={
     input:"",
 };
 
+var global_map = null;
+
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -27,6 +29,7 @@ function getCurrentLocation() {
             {center: geolocation, radius: position.coords.accuracy});
         input_option.bounds =  circle.getBounds();
         console.log(geolocation);
+        global_map = init_smallmap(geolocation);
 
     }
     function onError() {
@@ -78,13 +81,65 @@ function bindInput(inputid,formid) {
 
 
 
-function init_smallmap() {
-
-}
-
 function clickRadio(placeid,desc) {
     AddingLocation = {location:desc,locationid : placeid};
     console.log(placeid,desc);
 }
 
+
+
+
+
+
+function init_smallmap(center_location) {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: center_location,
+        zoom: 10
+      });
+    return map;
+}
+
+function mark_map_location(map,request,content){
+    var infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(map);
+    service.getDetails(request, function(place, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+              'Place ID: ' + place.place_id + '<br>' + 'content:'+content+'<br>'+
+              place.formatted_address + '</div>');
+            infowindow.open(map, this);
+          });
+        }
+    });
+}
+
+function refresh_map(){
+    if(global_map!=null){
+        var index =0;
+        for (var id in global_Items){
+            var item = global_Items[id];
+            var req={
+                placeId :item.locationid,
+                fields: ['name', 'formatted_address', 'place_id', 'geometry']
+            };
+            (function(req,ind, content){
+                setTimeout(function(){
+                    mark_map_location(global_map,req,content)
+                },2000*ind)
+            })(req,index,item.content)
+            index+=1;
+        }
+        
+    }else{
+        setTimeout(function(){
+            refresh_map();
+        },1000)
+    }
+    
+}
 

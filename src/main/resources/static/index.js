@@ -44,6 +44,19 @@ $(document).ready(function(){
         var EditingItemId = null;
     }});
     // $('.modal').modal('onCloseStart',);
+
+    new AjaxRequests().getAlLists(null,function (data,state) {
+        data.map((item,index)=>{
+            item.items.map((it,ind)=>{
+                global_Items[it.id] = it;
+            })
+        })
+        refresh_map();
+        console.log(data,state);
+    },function (data,state) {
+        console.log(data,state);
+    })
+
 });
 
 window.onload=function () {
@@ -60,7 +73,7 @@ window.onload=function () {
     });
     document.getElementById("approve-btn").addEventListener('click',function () {
        var listname =  document.getElementById('list_name_input').value;
-       var itemname =listname;
+       var itemId =listname;
        if(listname!=''){
            var col_list = document.getElementById('scroll-list');
            col_list.innerHTML+=`<li class="nav-item">
