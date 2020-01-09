@@ -22,6 +22,7 @@ public class ListitemEntity implements ListItemDTO{
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemid", nullable = false)
     public int getItemid() {
         return itemid;
