@@ -8,14 +8,14 @@ var AddingLocation = null;
 var EditingItemId = null;
 var global_Items={
     "test1":{
-        "listid":"test1",
+        "itemid":"test1",
         "content":"11111",
         "locationid":"ChIJ_cZ_332dX0YR9GZKastWFTE",
         "location":"Lidl, Sankt Göransgatan, 斯德哥尔摩瑞典",
         "assignee":"",
         "status":0
     },"test2":{
-        "listid":"test2",
+        "itemid":"test2",
         "content":"2222222",
         "location":"Lidl, Sveavägen, 斯德哥尔摩瑞典",
         "locationid":"ChIJffRzumidX0YRCyHbBTn0_Ls",
@@ -48,9 +48,12 @@ $(document).ready(function(){
     new AjaxRequests().getAlLists(null,function (data,state) {
         data.map((item,index)=>{
             item.items.map((it,ind)=>{
-                global_Items[it.id] = it;
+                global_Items[it.itemid] = it;
+                
             })
+            render_list(item);
         })
+        
         refresh_map();
         console.log(data,state);
     },function (data,state) {
@@ -58,6 +61,98 @@ $(document).ready(function(){
     })
 
 });
+
+
+
+
+function render_list(oneList){
+    var listname = oneList.listname;
+    var listid = oneList.listid;
+    var col_list = document.getElementById('scroll-list');
+    col_list.innerHTML+=`<li class="nav-item">
+                                <a class="nav-link" href="#_${listid}">${listname}</a>
+                            </li>`;
+    var col_content = document.getElementById('todo-content');
+
+    var new_node = document.createElement('div');
+    new_node.id=listid;
+    new_node.className = 'list-box';
+    new_node.innerHTML =`<div id="_${listid}" class="list-box">
+                                    <h3>${listname}</h3>
+                                    <div class="row">
+                                        <!--to do part-->
+                                        <div class="col">
+                                            <div class="demo-card-square mdl-shadow--2dp ">
+                                                <div class="mdl-card__title mdl-card--expand mdl-card--border card-title">
+                                                    <h2 class="mdl-card__title-text">todo</h2>
+                                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect modal-trigger"  data-target="add-modal"  onclick="openModal('${listid}')">
+                                                        add
+                                                    </button>
+                                                </div>
+                                                <div id="${listid}-todo">
+                                                    
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--done part-->
+                                        <div class="col">
+                                            <div class="demo-card-square mdl-shadow--2dp">
+                                                <div class="mdl-card__title mdl-card--expand mdl-card--border">
+                                                    <h2 class="mdl-card__title-text">done</h2>
+                                                </div>
+                                                <div id="${listid}-done"></div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>`;
+
+    // componentHandler.upgradeDom(new_node);
+    col_content.appendChild(new_node);
+    
+    var todoDiv = document.getElementById(`${listid}-todo`);
+    var todoHtml = '';
+    var doneDiv = document.getElementById(`${listid}-done`);
+    var doneHtml = '';
+    oneList.items.map((it,ind)=>{
+        // console.log(it.status);
+        if(it.status==0){
+            todoHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
+            <label>
+                <input type="checkbox" />
+                <span class="black-text" onclick="taggleTODO()">${it.content}</span><br>
+            </label><br>
+            <span style="display: inline-block;width: 70%;">location:</span>
+            <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
+        </div>`
+        }else{
+            doneHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
+            <label>
+                <input type="checkbox" checked/>
+                <span class="black-text">${it.content}</span><br>
+            </label><br>
+            <span style="display: inline-block;width: 70%;">location:</span>
+            <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
+        </div>`;
+        }
+        
+    });
+    todoDiv.innerHTML = todoHtml;
+    doneDiv.innerHTML = doneHtml;
+    
+    // componentHandler.upgradeDom(new_node);
+
+}
+
+
+
+
+
+
+
+
 
 window.onload=function () {
     var dialog = document.querySelector('dialog');
@@ -97,14 +192,7 @@ window.onload=function () {
                                                     </button>
                                                 </div>
                                                 <div id="${listname}-todo">
-                                                    <div class="todo-content mdl-card--border" id="${itemId}">
-                                                        <label>
-                                                            <input type="checkbox" />
-                                                            <span class="black-text">todotodotodo todo todo todotodotodotodotodot odotodotodotod otodo todoto dotodo</span><br>
-                                                        </label>
-                                                        <span style="display: inline-block;width: 70%;">location:</span>
-                                                        <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${itemId}')">Edit</span>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
 
@@ -122,8 +210,9 @@ window.onload=function () {
                                     </div>
 
                                 </div>`;
-           componentHandler.upgradeDom(new_node);
+           
            col_content.appendChild(new_node);
+        //    componentHandler.upgradeDom(new_node);
            document.getElementById('list_name_input').value ='';
            dialog.close();
 
@@ -149,7 +238,7 @@ function EditItem(itemId) {
             document.getElementById('status').value = it.status;
             document.getElementById('location2').value = it.location;
             document.getElementById('assignee2').value = it.assignee;
-
+            M.updateTextFields();
             break;
         }
     }
@@ -172,7 +261,7 @@ function AddItem() {
 
 }
 
-function renderList(tid){
+function re_renderOneList(tid){
 
     var todo = document.getElementById(tid+"-todo");
     todo.innerHTML='';
