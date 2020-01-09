@@ -21,7 +21,7 @@ AjaxRequests.prototype.getAlLists= function(req,successCallback,failCallback){
 };
 
 
-AjaxRequests.prototype.getAlLists= function(req,successCallback,failCallback){
+AjaxRequests.prototype.login= function(req,successCallback,failCallback){
     successCallback = typeof successCallback === 'function'?successCallback:new Function();
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
