@@ -6,6 +6,7 @@ public class AddListItem {
     private int itemid;
     private int status;
     private String assignee;
+    private int listid;
 
     public String getContent() {
         return content;
@@ -38,4 +39,8 @@ public class AddListItem {
     public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
+
+    public int getListid() {return listid; }
+
+    public void setListid(int listid) { this.listid = listid; }
 }

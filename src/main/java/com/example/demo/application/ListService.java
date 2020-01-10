@@ -2,6 +2,7 @@ package com.example.demo.application;
 
 import com.example.demo.domain.ListDTO;
 import com.example.demo.domain.ListEntity;
+import com.example.demo.domain.ListitemEntity;
 import com.example.demo.repository.ListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ public class ListService {
 
     public ListDTO getListByListid(int listid) {
         return listRepository.getByListid(listid);
+    }
+
+    public ListDTO findListById(int listid) {
+        return listRepository.findByListid(listid);
+    }
+
+    public ListEntity editList(ListEntity list) {
+        return listRepository.save(list);
     }
 
 }

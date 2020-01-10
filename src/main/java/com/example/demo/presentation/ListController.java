@@ -4,8 +4,11 @@ import com.example.demo.application.ListItemService;
 import com.example.demo.application.ListService;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.ListDTO;
+import com.example.demo.domain.ListEntity;
 import com.example.demo.domain.ListItemDTO;
 import com.example.demo.domain.ListitemEntity;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,42 +27,13 @@ public class ListController {
     @Autowired
     private ListItemService listItemService;
 
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
-
-//    @PostMapping("/login")
-//    public String loginUser(@Valid UserEntity userEntity, BindingResult result, Model model) throws Exception{
-//        UserEntity userloggedIn = null;
-//        try {
-//            userloggedIn = userService.login(userEntity);
-//        } catch (Exception ex) {
-//            throw new Exception();
-//        }
-//
-//        model.addAttribute("username", userloggedIn.getName());
-//        model.addAttribute("userId", userloggedIn.getUserId());
-//
-//        return returnTo("list-view", model);
-//    }
-
-//    @GetMapping ("/")
-//    public String getLists(){
-//        List<? extends ListDTO> allLists = listService.getAllLists();
-////        model.addAttribute("allLists", allLists);
-//
-//        return "index";
-//    }
-
     @RequestMapping("/lists")
     public String getLists() {
        List<? extends ListDTO> allLists = listService.getAllLists();
 
 
-        JSONArray lists_res = new JSONArray();
-//       int listid;
-//
+       JSONArray lists_res = new JSONArray();
+
        for (int i = 0; i < allLists.size(); i++) {
 
            ListDTO item= allLists.get(i);
@@ -83,6 +57,24 @@ public class ListController {
         return (List<ListDTO>) listService.getAllLists();
     }
 
+//    @RequestMapping(value = "/updateList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public List<ListDTO> editList(@RequestBody AddLists addLists) throws URISyntaxException {
+//        String listsName = addLists.getName();
+//        int listid = addLists.getListid();
+//        String collaborators = addLists.getCollaborators();
+//        ListDTO listDTO = listService.findListById(listid);
+//
+//        if (listDTO != null) {
+//            listDTO.setListname(listsName);
+//            listDTO.setCollaborators(collaborators);
+//            listService.editList((ListEntity) listDTO);
+//        }
+//
+//        return (List<ListDTO>) listService.getAllLists();
+//    }
+
+
+
     @RequestMapping("/listItems")
     public List<ListItemDTO> getListItems() {
         return (List<ListItemDTO>) listItemService.getAllItems();
@@ -91,8 +83,9 @@ public class ListController {
     @RequestMapping(value = "/addListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<ListItemDTO> newListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
         String content = addListItem.getContent();
+        int listid = addListItem.getListid();
         if(listItemService.getListItemDTOByContent(content) == null) {
-            listItemService.createListitem(content);
+            listItemService.createListitem(content, listid);
         }
         return (List<ListItemDTO>) listItemService.getAllItems();
     }
@@ -114,14 +107,41 @@ public class ListController {
         return (List<ListItemDTO>) listItemService.getAllItems();
     }
 
-//    @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
-//        int itemid = addListItem.getItemid();
-//        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
-//
-//        if (listItemDTO != null) {
-//            listItemService.deleteListitem((ListitemEntity) listItemDTO);
+    @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
+        int itemid = addListItem.getItemid();
+        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
+
+        if (listItemDTO != null) {
+            listItemService.deleteListitem((ListitemEntity) listItemDTO);
+        }
+        return (List<ListItemDTO>) listItemService.getAllItems();
+    }
+
+//    public boolean validateToken(String token) {
+//        //System.out.println(token);
+//        if (token == null) {
+//            return false;
 //        }
-//        return (List<ListItemDTO>) listItemService.getAllItems();
+//
+//        try {
+//            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+//            if (Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject().equals("john")) {
+//                String str = body.toLowerCase();
+//                Message res = game.guess(str);
+//                Message.sendMsg(output, res);
+//                if (res.getType().equals("finish")) {
+//                    this.score = Integer.valueOf(res.getBody());
+//                    Message start_msg = new Message("update", game.getUnderline() + "," + Integer.toString(game.getCounter()) + "," + Integer.toString(game.getScore()));
+//                    Message.sendMsg(output, start_msg);
+//                }
+//            } else {
+//                Message start_msg = new Message("login", "user is not authenticated");
+//                Message.sendMsg(output, start_msg);
+//            }
+//        } catch (JwtException e) {
+//            Message start_msg = new Message("login", "user is not authenticated");
+//            Message.sendMsg(output, start_msg);
+//        }
 //    }
 }

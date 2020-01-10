@@ -1,6 +1,7 @@
 package com.example.demo.application;
 
 import com.example.demo.domain.UserEntity;
+import com.example.demo.presentation.UserModel;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,21 @@ public class UserService {
         return userRepository.findByName(name);
     }
 
-    public UserEntity login(UserEntity userEntity) throws Exception{
-        UserEntity foundUser = userRepository.getUserEntityByNameAndPassword(userEntity.getName(), userEntity.getPassword());
-        if (foundUser == null)
-            throw new Exception();
-        return foundUser;
+    public UserEntity login(String username, String password) throws Exception{
+       UserEntity foundUser = getUserByName(username);
+
+        if (foundUser == null) {
+            return null;
+        }
+        else {
+            String getPass = foundUser.getPassword();
+            if(getPass.equals(password)) {
+                return foundUser;
+            }
+            else {
+                return null;
+            }
+        }
     }
 
     public void saveUser(UserEntity userEntity) throws Exception{
@@ -35,4 +46,6 @@ public class UserService {
             throw new Exception();
         userRepository.save(userEntity);
     }
+
+    public UserEntity getUserByEmail(String email) { return userRepository.getUserEntityByEmail(email);}
 }

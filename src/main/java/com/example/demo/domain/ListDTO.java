@@ -7,4 +7,7 @@ public interface ListDTO{
     String getOwner();
     String getCollaborators();
     int getListid();
+    void setListname(String listname);
+    void setCollaborators(String collaborators);
+
 }
