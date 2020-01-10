@@ -122,7 +122,7 @@ function render_list(oneList){
             todoHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
             <label>
                 <input type="checkbox" />
-                <span class="black-text" onclick="taggleTODO()">${it.content}</span><br>
+                <span class="black-text" onclick="taggleTODO('${it.itemid}')">${it.content}</span><br>
             </label><br>
             <span style="display: inline-block;width: 70%;">location:</span>
             <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
@@ -131,7 +131,7 @@ function render_list(oneList){
             doneHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
             <label>
                 <input type="checkbox" checked/>
-                <span class="black-text">${it.content}</span><br>
+                <span class="black-text" onclick="taggleTODO('${it.itemid}')">${it.content}</span><br>
             </label><br>
             <span style="display: inline-block;width: 70%;">location:</span>
             <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
@@ -148,7 +148,22 @@ function render_list(oneList){
 
 
 
+function taggleTODO(_id){
+    
+    var state0 = global_Items[_id].status;
+    if(state0==0){
+        global_Items[_id].status = 1;
+    }else{
+        global_Items[_id].status = 0;
+    }
 
+    new AjaxRequests().updateItem(global_Items[_id],function(data,state){
+        console.log(data,state);
+    },function(data,state){
+        console.log(data,state);
+        global_Items[_id].status = state0;
+    })
+}
 
 
 
@@ -252,12 +267,18 @@ function AddItem() {
     var tid = EditingTableId;
     var req = {
         "listid":tid,
-        "content":document.getElementById("content"),
+        "content":document.getElementById("content").value,
         "location":AddingLocation.location,
         "locationid":AddingLocation.locationid,
-        "assignee":document.getElementById("assignee"),
+        "assignee":document.getElementById("assignee").value,
         "status":0
     }
+    new AjaxRequests().addItem(req,function(data,state){
+        console.log(data,state);
+        $('.modal').modal('close');
+    },function (data,state) {
+        console.log(data,state);
+    })
 
 }
 
@@ -273,6 +294,4 @@ function re_renderOneList(tid){
                                                         <span style="display: inline-block;width: 70%;">location:</span>
                                                         <span href="#!" class="waves-effect waves-green btn-flat" onclick="EditItem('${itemId}')">Edit</span>
                                                     </div>`;
-
-
 }
