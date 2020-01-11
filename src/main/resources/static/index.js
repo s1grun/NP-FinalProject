@@ -24,6 +24,8 @@ var global_Items={
     }
 };
 
+var USERID = 2;
+var USERNAME = "aaa";
 
 
 
@@ -45,7 +47,7 @@ $(document).ready(function(){
     }});
     // $('.modal').modal('onCloseStart',);
 
-    new AjaxRequests().getAlLists(null,function (data,state) {
+    new AjaxRequests().getAlLists(USERID,function (data,state) {
         data.map((item,index)=>{
             item.items.map((it,ind)=>{
                 global_Items[it.itemid] = it;
@@ -183,18 +185,22 @@ window.onload=function () {
     });
     document.getElementById("approve-btn").addEventListener('click',function () {
        var listname =  document.getElementById('list_name_input').value;
-       var itemId =listname;
        if(listname!=''){
-           var col_list = document.getElementById('scroll-list');
-           col_list.innerHTML+=`<li class="nav-item">
-                                        <a class="nav-link" href="#${listname}">${listname}</a>
+           new AjaxRequests().addList({listname:listname, owner:USERID},function (data,state) {
+               console.log(data,data.status);
+               dialog.close();
+               if(data.status==200){
+                   var listid = data.listid;
+                   var col_list = document.getElementById('scroll-list');
+                   col_list.innerHTML+=`<li class="nav-item">
+                                        <a class="nav-link" href="#_${listid}">${listname}</a>
                                     </li>`;
-           var col_content = document.getElementById('todo-content');
+                   var col_content = document.getElementById('todo-content');
 
-           var new_node = document.createElement('div');
-           new_node.id=listname;
-           new_node.className = 'list-box';
-           new_node.innerHTML =`<div id="${listname}" class="list-box">
+                   var new_node = document.createElement('div');
+                   new_node.id=listid;
+                   new_node.className = 'list-box';
+                   new_node.innerHTML =`<div id="_${listid}" class="list-box">
                                     <h3>${listname}</h3>
                                     <div class="row">
                                         <!--to do part-->
@@ -202,11 +208,11 @@ window.onload=function () {
                                             <div class="demo-card-square mdl-shadow--2dp ">
                                                 <div class="mdl-card__title mdl-card--expand mdl-card--border card-title">
                                                     <h2 class="mdl-card__title-text">todo</h2>
-                                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect modal-trigger"  data-target="add-modal"  onclick="openModal(${listname})">
+                                                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect modal-trigger"  data-target="add-modal"  onclick="openModal(${listid})">
                                                         add
                                                     </button>
                                                 </div>
-                                                <div id="${listname}-todo">
+                                                <div id="${listid}-todo">
                                                     
                                                 </div>
                                             </div>
@@ -218,20 +224,32 @@ window.onload=function () {
                                                 <div class="mdl-card__title mdl-card--expand mdl-card--border">
                                                     <h2 class="mdl-card__title-text">done</h2>
                                                 </div>
-                                                <div id="${listname}-done"></div>
+                                                <div id="${listid}-done"></div>
                                                 
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>`;
-           
-           col_content.appendChild(new_node);
-        //    componentHandler.upgradeDom(new_node);
-           document.getElementById('list_name_input').value ='';
-           dialog.close();
 
+                   col_content.appendChild(new_node);
+                   //    componentHandler.upgradeDom(new_node);
+                   document.getElementById('list_name_input').value ='';
+
+               }else{
+                   M.toast({html: '<p style="color:blue">Listname already exists</p>'})
+               }
+           },function (data,state) {
+               console.log(data,state);
+               dialog.close();
+               M.toast({html: '<p style="color:red">Oooops! Please connect to internet</p>'})
+           });
+       }else{
+           dialog.close();
+           M.toast({html: '<p style="color:red">Listname Required</p>'})
        }
+
+
     })
 }
 

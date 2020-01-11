@@ -13,8 +13,9 @@ public class ListEntity implements ListDTO{
     private String owner;
     private String collaborators;
 
-    public ListEntity(String listname) {
+    public ListEntity(String listname, String owner) {
         this.listname = listname;
+        this.owner = owner;
     }
 
     public ListEntity() {

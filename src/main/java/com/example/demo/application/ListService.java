@@ -16,9 +16,9 @@ public class ListService {
     @Autowired
     private ListRepository listRepository;
 
-    public List<? extends ListDTO> getAllLists(){
+    public List<? extends ListDTO> getAllLists(String owner){
 //        return listRepository.findAll();
-        return listRepository.findAll();
+        return listRepository.findAllByOwner(owner);
     }
 
     public ListDTO getByName(String listname){
@@ -26,9 +26,8 @@ public class ListService {
         return listRepository.getByListname(listname);
     }
 
-    public ListEntity createList(String listname){
-        System.out.println("Listname" + listname);
-        return listRepository.save(new ListEntity(listname));
+    public ListEntity createList(String listname, String owner){
+        return listRepository.save(new ListEntity(listname, owner));
     }
 
     public ListDTO getListByListid(int listid) {

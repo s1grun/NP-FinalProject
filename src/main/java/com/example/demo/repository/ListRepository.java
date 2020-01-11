@@ -18,4 +18,6 @@ public interface ListRepository extends JpaRepository<ListEntity, List> {
     ListDTO getByListid(int listid);
     List<ListEntity> findAll();
     ListDTO findByListid(int listid);
+
+    List<? extends ListDTO> findAllByOwner(String owner);
 }

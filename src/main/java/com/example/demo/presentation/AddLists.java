@@ -1,17 +1,17 @@
 package com.example.demo.presentation;
 
 public class AddLists {
-    private String name;
+    private String listname;
     private int listid;
     private String owner;
     private String collaborators;
 
-    public String getName() {
-        return name;
+    public String getListname() {
+        return listname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setListname(String listname) {
+        this.listname = listname;
     }
 
     public String getOwner() {return owner; }

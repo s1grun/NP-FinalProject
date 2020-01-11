@@ -28,14 +28,12 @@ public class ListController {
     private ListItemService listItemService;
 
     @RequestMapping("/lists")
-    public String getLists() {
-       List<? extends ListDTO> allLists = listService.getAllLists();
-
+    public String getLists(@RequestParam("owner") String ownerid) {
+       List<? extends ListDTO> allLists = listService.getAllLists(ownerid);
 
        JSONArray lists_res = new JSONArray();
 
        for (int i = 0; i < allLists.size(); i++) {
-
            ListDTO item= allLists.get(i);
            System.out.println(item.toString());
            JSONObject temp = new JSONObject(item);
@@ -49,12 +47,25 @@ public class ListController {
     }
 
     @RequestMapping(value = "/addList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListDTO> newList(@RequestBody AddLists addLists) throws URISyntaxException {
-        String listname = addLists.getName();
-        if (listService.getByName(listname) == null) {
-            listService.createList(listname);
+    public String newList(@RequestBody AddLists addLists) throws URISyntaxException {
+        String listname = addLists.getListname();
+        String owner = addLists.getOwner();
+
+        ListDTO alist = listService.getByName(listname);
+        if (alist ==null||(alist!=null&&(!alist.getOwner().equals(owner)))){
+            listService.createList(listname, owner);
+            alist = listService.getByName(listname);
+            JSONObject temp = new JSONObject();
+            temp.put("listname", listname);
+            temp.put("listid", alist.getListid());
+            temp.put("status", 200);
+            return temp.toString();
+        }else{
+            JSONObject temp = new JSONObject();
+            temp.put("status", 500);
+            return temp.toString();
         }
-        return (List<ListDTO>) listService.getAllLists();
+
     }
 
 //    @RequestMapping(value = "/updateList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
