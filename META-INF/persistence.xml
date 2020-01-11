@@ -5,8 +5,9 @@
         <class>com.example.demo.domain.ListEntity</class>
         <class>com.example.demo.domain.ListItemEntity</class>
         <class>com.example.demo.domain.ListitemEntity</class>
+        <class>com.example.demo.domain.LocationEntity</class>
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://ec2-54-217-234-157.eu-west-1.compute.amazonaws.com:5432/dflnn18ltm94g1"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
         </properties>
     </persistence-unit>
