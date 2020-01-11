@@ -1,6 +1,6 @@
 package com.example.demo.presentation;
 
-public class AddListItem {
+public class ListitemModel {
 
     private String content;
     private int itemid;

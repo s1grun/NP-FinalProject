@@ -5,10 +5,19 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "location", schema = "public", catalog = "dflnn18ltm94g1")
-public class LocationEntity {
+public class LocationEntity implements LocationDTO{
     private String locationid;
     private String name;
     private String coord;
+
+    public LocationEntity(String locationid, String name, String coord) {
+        this.locationid = locationid;
+        this.name = name;
+        this.coord = coord;
+    }
+
+    public LocationEntity() {
+    }
 
     @Id
     @Column(name = "locationid", nullable = false, length = -1)
@@ -34,6 +43,11 @@ public class LocationEntity {
     @Column(name = "coord", nullable = false, length = -1)
     public String getCoord() {
         return coord;
+    }
+
+    @Override
+    public void setLocation(String locationid) {
+
     }
 
     public void setCoord(String coord) {

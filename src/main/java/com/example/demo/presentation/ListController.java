@@ -4,11 +4,8 @@ import com.example.demo.application.ListItemService;
 import com.example.demo.application.ListService;
 import com.example.demo.application.UserService;
 import com.example.demo.domain.ListDTO;
-import com.example.demo.domain.ListEntity;
 import com.example.demo.domain.ListItemDTO;
 import com.example.demo.domain.ListitemEntity;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +89,9 @@ public class ListController {
     }
 
     @RequestMapping(value = "/addListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListItemDTO> newListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
-        String content = addListItem.getContent();
-        int listid = addListItem.getListid();
+    public List<ListItemDTO> newListItem(@RequestBody ListitemModel listitemModel) throws URISyntaxException {
+        String content = listitemModel.getContent();
+        int listid = listitemModel.getListid();
         if(listItemService.getListItemDTOByContent(content) == null) {
             listItemService.createListitem(content, listid);
         }
@@ -102,11 +99,11 @@ public class ListController {
     }
 
     @RequestMapping(value = "/updateListItem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListItemDTO> updateListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
-        String content = addListItem.getContent();
-        int itemid = addListItem.getItemid();
-        int status = addListItem.getStatus();
-        String assignee = addListItem.getAssignee();
+    public List<ListItemDTO> updateListItem(@RequestBody ListitemModel listitemModel) throws URISyntaxException {
+        String content = listitemModel.getContent();
+        int itemid = listitemModel.getItemid();
+        int status = listitemModel.getStatus();
+        String assignee = listitemModel.getAssignee();
         ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
 
         if (listItemDTO != null) {
@@ -119,8 +116,8 @@ public class ListController {
     }
 
     @RequestMapping(value = "/deleteListItem", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ListItemDTO> deleteListItem(@RequestBody AddListItem addListItem) throws URISyntaxException {
-        int itemid = addListItem.getItemid();
+    public List<ListItemDTO> deleteListItem(@RequestBody ListitemModel listitemModel) throws URISyntaxException {
+        int itemid = listitemModel.getItemid();
         ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
 
         if (listItemDTO != null) {
