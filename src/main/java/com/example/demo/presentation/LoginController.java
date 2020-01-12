@@ -21,17 +21,30 @@ import java.util.Date;
 public class LoginController {
     @Autowired
     private UserService userService;
-    Key key;
+//    Key key;
 
-    @ModelAttribute("user")
-    public UserService create() {
-        return new UserService();
-    }
-
-//    @GetMapping("/")
-//    public String index() {
-//        return "index";
+//    @ModelAttribute("user")
+//    public UserService create() {
+//        return new UserService();
 //    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String register(@RequestBody UserModel user) throws Exception {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        try{
+            userService.registerUser(username, password);
+            JSONObject res =  new JSONObject();
+            res.put("status", 200);
+            return res.toString();
+        } catch (Exception ex) {
+            System.out.println("Registration failed");
+            JSONObject res =  new JSONObject();
+            res.put("status",500);
+            return res.toString();
+        }
+
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String login(@RequestBody UserModel user) throws Exception {
@@ -63,11 +76,6 @@ public class LoginController {
            return res.toString();
         }
     }
-//
-//    @GetMapping("/login")
-//    public String showLoginForm() {
-//        return "login";
-//    }
 
 
 }

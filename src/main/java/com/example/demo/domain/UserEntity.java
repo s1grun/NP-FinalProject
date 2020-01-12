@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "public", catalog = "postgres")
-public class UserEntity {
+public class UserEntity implements UserDTO{
     private String userId;
     private String name;
     private String password;
@@ -15,12 +15,12 @@ public class UserEntity {
 //    @ManyToMany(targetEntity = StudygroupEntity.class)
 //    private Set studyGroupSet;
 
-    public UserEntity(String userId, String name, String password, String email){
+    public UserEntity(String name, String password){
         super();
-        this.userId = userId;
+//        this.userId = userId;
         this.name = name;
         this.password = password;
-        this.email = email;
+//        this.email = email;
 //        this.studyGroupSet = studyGroupSet;
     }
 

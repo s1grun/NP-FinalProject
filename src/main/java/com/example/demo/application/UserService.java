@@ -3,6 +3,7 @@ package com.example.demo.application;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.presentation.UserModel;
 import com.example.demo.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +41,14 @@ public class UserService {
         }
     }
 
-    public void saveUser(UserEntity userEntity) throws Exception{
-        boolean usernameExists = userRepository.existsByName(userEntity.getName());
-        if (usernameExists)
+    public UserEntity registerUser(String username, String password) throws Exception{
+        UserEntity usernameExists = getUserByName(username);
+        if (usernameExists != null) {
             throw new Exception();
-        userRepository.save(userEntity);
+        }
+        else {
+            return userRepository.save(new UserEntity(username, password));
+        }
     }
 
     public UserEntity getUserByEmail(String email) { return userRepository.getUserEntityByEmail(email);}
