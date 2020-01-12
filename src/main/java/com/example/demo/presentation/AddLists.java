@@ -1,6 +1,8 @@
 package com.example.demo.presentation;
 
-public class AddLists {
+import com.example.demo.domain.ListDTO;
+
+public class AddLists implements ListDTO {
     private String listname;
     private int listid;
     private String owner;

@@ -14,10 +14,11 @@ import java.util.List;
 public interface ListRepository extends JpaRepository<ListEntity, List> {
 //    ListDTO getListEntityByListname(String listname);
     ListDTO getByListname(String listname);
+    ListDTO getByListnameAndOwner(String listname, String ownerid);
 //    ListDTO getAllByListname();
     ListDTO getByListid(int listid);
     List<ListEntity> findAll();
     ListDTO findByListid(int listid);
 
-    List<? extends ListDTO> findAllByOwner(String owner);
+    List<ListDTO> findAllByOwner(String owner);
 }

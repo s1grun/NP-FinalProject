@@ -60,10 +60,10 @@ public class ListController {
         String listname = addLists.getListname();
         String owner = addLists.getOwner();
 
-        ListDTO alist = listService.getByName(listname);
+        ListDTO alist = listService.getByNameAndOwner(listname,owner);
         if (alist ==null||(alist!=null&&(!alist.getOwner().equals(owner)))){
             listService.createList(listname, owner);
-            alist = listService.getByName(listname);
+
             JSONObject temp = new JSONObject();
             temp.put("listname", listname);
             temp.put("listid", alist.getListid());
