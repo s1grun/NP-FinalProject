@@ -9,7 +9,7 @@ AjaxRequests.prototype.getAlLists= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
     $.ajax({
-        url:'http://localhost:8080/lists?owner='+req,
+        url:'/lists?owner='+req,
         type:'GET',
         contentType:'application/json',
         // dataType:"JSON",
@@ -26,7 +26,7 @@ AjaxRequests.prototype.login= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
     $.ajax({
-        url:'http://localhost:8080/login',
+        url:'/login',
         type:'POST',
         contentType:'application/json',
         dataType:"JSON",
@@ -44,7 +44,7 @@ AjaxRequests.prototype.updateItem= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
     $.ajax({
-        url:'http://localhost:8080/updateListItem',
+        url:'/updateListItem',
         type:'POST',
         data:JSON.stringify(req),
         contentType:'application/json',
@@ -61,7 +61,7 @@ AjaxRequests.prototype.addItem= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
     console.log(req);
     $.ajax({
-        url:'http://localhost:8080/addListItem',
+        url:'/addListItem',
         type:'post',
         data:JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
@@ -79,7 +79,7 @@ AjaxRequests.prototype.addList= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
     
     $.ajax({
-        url:'http://localhost:8080/addList',
+        url:'/addList',
         type:'post',
         data:JSON.stringify(req),
         contentType: "application/json;charset=utf-8",
@@ -97,7 +97,7 @@ AjaxRequests.prototype.deleteItem= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
     $.ajax({
-        url:'http://localhost:8080/deleteListItem',
+        url:'/deleteListItem',
         type:'post',
         data:JSON.stringify(req),
         contentType: "application/json;charset=utf-8",
@@ -115,7 +115,7 @@ AjaxRequests.prototype.deleteList= function(req,successCallback,failCallback){
     failCallback = typeof failCallback === 'function'?failCallback:new Function();
 
     $.ajax({
-        url:'http://localhost:8080/deleteList',
+        url:'/deleteList',
         type:'post',
         data:JSON.stringify(req),
         contentType: "application/json;charset=utf-8",

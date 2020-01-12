@@ -1,5 +1,8 @@
 package com.example.demo.presentation;
 
+import com.example.demo.domain.ListDTO;
+import com.example.demo.domain.ListEntity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +23,8 @@ import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ListController.class)
@@ -35,30 +38,28 @@ class ListControllerTest {
 
     @Test
     void getLists() throws Exception{
-        ListsModel listsModel = new ListsModel();
-        listsModel.setOwner("john");
-        listsModel.setListid(1);
-        listsModel.setListname("test");
+        ListEntity listEntity = new ListEntity();
+        listEntity.setOwner("3");
+        listEntity.setListid(1);
+        listEntity.setListname("test");
 
-        List<ListsModel> allLists = singletonList(listsModel);
+//        List<ListEntity> allLists = singletonList(listEntity);
 
         JSONObject res = new JSONObject();
-        res.put("data", allLists.toString() );
+        res.put("listname", listEntity.getListname());
         res.put("status",200);
-//        res.put("locations",locationService.getAllLocations());
 
+        given(listController.getLists("3")).willReturn( res.toString() );
 
-
-        given(listController.getLists(listsModel.getOwner())).willReturn( res.toString() );
-
-        MvcResult result= mockMvc.perform(get("/lists?owner=john")
+        MvcResult result= mockMvc.perform(get("/lists?owner=3")
                 .contentType(APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
         String str = result.getResponse().getContentAsString();
         System.out.println(str);
 
-        assertThat(new JSONObject(str).get("data")).isEqualTo(listsModel.getListname());
+        assertThat(new JSONObject(str).get("listname")).isEqualTo(listEntity.getListname());
 
 
     }

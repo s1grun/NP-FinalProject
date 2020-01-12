@@ -409,7 +409,7 @@ function AddItem() {
     new AjaxRequests().addItem(req,function(data,state){
         console.log(data,state);
         $('.modal').modal('close');
-        if(data.status==200){
+        if(data.status==200 || data.status==201){
             data.locations.map((it,id)=>{
                 locations[it.locationid]=it;
             });
@@ -419,9 +419,9 @@ function AddItem() {
                 global_Items[item.itemid] = item;
             })
             refresh_map();
-        }else{
-            $('.modal').modal('close');
-            M.toast({html: '<p style="color:red">'+data.data+'</p>'})
+            if(data.status==201){
+                M.toast({html: '<p style="color:red">'+data.msg+'</p>'})
+            }
         }
     },function (data,state) {
         console.log(data,state);
