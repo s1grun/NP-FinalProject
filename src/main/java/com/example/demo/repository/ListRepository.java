@@ -21,4 +21,5 @@ public interface ListRepository extends JpaRepository<ListEntity, List> {
     ListDTO findByListid(int listid);
 
     List<ListDTO> findAllByOwner(String owner);
+    int deleteByListid(int listid);
 }

@@ -77,26 +77,26 @@ public class ListController {
 
     }
 
-//    @RequestMapping(value = "/deleteList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public String deleteList(@RequestBody ListitemModel listitemModel) throws URISyntaxException {
-////        System.out.println(listitemModel.getItemid());
-//        int itemid = listitemModel.getItemid();
-//        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
-//
-//        if (listItemDTO != null) {
-//            listItemService.deleteListitem(itemid);
-//            JSONObject res = new JSONObject();
-//            res.put("status",200);
-//            res.put("msg","ok");
-//            return res.toString();
-//        }else{
-//            JSONObject res = new JSONObject();
-//            res.put("status",500);
-//            res.put("msg","No this item");
-//            return res.toString();
-//        }
-//
-//    }
+    @RequestMapping(value = "/deleteList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteList(@RequestBody ListsModel listsModel) throws URISyntaxException {
+//        System.out.println(listitemModel.getItemid());
+        int listid = listsModel.getListid();
+        ListDTO listDTO = listService.findListById(listid);
+
+        if (listDTO != null) {
+            listService.deleteList(listid);
+            JSONObject res = new JSONObject();
+            res.put("status",200);
+            res.put("msg","ok");
+            return res.toString();
+        }else{
+            JSONObject res = new JSONObject();
+            res.put("status",500);
+            res.put("msg","No this item");
+            return res.toString();
+        }
+
+    }
 
 //    @RequestMapping(value = "/updateList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public List<ListDTO> editList(@RequestBody ListsModel addLists) throws URISyntaxException {

@@ -47,4 +47,6 @@ public class ListService {
         return listRepository.save(list);
     }
 
+    public int deleteList(int listid) { return listRepository.deleteByListid(listid);}
+
 }
