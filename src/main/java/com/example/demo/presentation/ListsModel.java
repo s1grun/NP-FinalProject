@@ -2,7 +2,7 @@ package com.example.demo.presentation;
 
 import com.example.demo.domain.ListDTO;
 
-public class AddLists implements ListDTO {
+public class ListsModel implements ListDTO {
     private String listname;
     private int listid;
     private String owner;

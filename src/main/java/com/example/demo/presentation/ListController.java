@@ -56,9 +56,9 @@ public class ListController {
     }
 
     @RequestMapping(value = "/addList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String newList(@RequestBody AddLists addLists) throws URISyntaxException {
-        String listname = addLists.getListname();
-        String owner = addLists.getOwner();
+    public String newList(@RequestBody ListsModel listsModel) throws URISyntaxException {
+        String listname = listsModel.getListname();
+        String owner = listsModel.getOwner();
 
         ListDTO alist = listService.getByNameAndOwner(listname,owner);
         if (alist ==null||(alist!=null&&(!alist.getOwner().equals(owner)))){
@@ -77,8 +77,29 @@ public class ListController {
 
     }
 
+//    @RequestMapping(value = "/deleteList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public String deleteList(@RequestBody ListitemModel listitemModel) throws URISyntaxException {
+////        System.out.println(listitemModel.getItemid());
+//        int itemid = listitemModel.getItemid();
+//        ListItemDTO listItemDTO = listItemService.findListitemByItemid(itemid);
+//
+//        if (listItemDTO != null) {
+//            listItemService.deleteListitem(itemid);
+//            JSONObject res = new JSONObject();
+//            res.put("status",200);
+//            res.put("msg","ok");
+//            return res.toString();
+//        }else{
+//            JSONObject res = new JSONObject();
+//            res.put("status",500);
+//            res.put("msg","No this item");
+//            return res.toString();
+//        }
+//
+//    }
+
 //    @RequestMapping(value = "/updateList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public List<ListDTO> editList(@RequestBody AddLists addLists) throws URISyntaxException {
+//    public List<ListDTO> editList(@RequestBody ListsModel addLists) throws URISyntaxException {
 //        String listsName = addLists.getName();
 //        int listid = addLists.getListid();
 //        String collaborators = addLists.getCollaborators();
