@@ -14,7 +14,7 @@ public class ListitemModel {
     }
 
     public void setContent(String content) {
-        this.content = content.toUpperCase();
+        this.content = content;
     }
 
     public int getItemid() {

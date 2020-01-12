@@ -63,7 +63,7 @@ public class ListController {
         ListDTO alist = listService.getByNameAndOwner(listname,owner);
         if (alist ==null||(alist!=null&&(!alist.getOwner().equals(owner)))){
             listService.createList(listname, owner);
-
+            alist = listService.getByNameAndOwner(listname,owner);
             JSONObject temp = new JSONObject();
             temp.put("listname", listname);
             temp.put("listid", alist.getListid());
@@ -84,15 +84,23 @@ public class ListController {
         ListDTO listDTO = listService.findListById(listid);
 
         if (listDTO != null) {
-            listService.deleteList(listid);
-            JSONObject res = new JSONObject();
-            res.put("status",200);
-            res.put("msg","ok");
-            return res.toString();
+            try {
+                listService.deleteList(listid);
+                JSONObject res = new JSONObject();
+                res.put("status",200);
+                res.put("msg","ok");
+                return res.toString();
+            }catch (Exception e){
+                JSONObject res = new JSONObject();
+                res.put("status",500);
+                res.put("msg","cannot delete from DB");
+                return res.toString();
+            }
+
         }else{
             JSONObject res = new JSONObject();
             res.put("status",500);
-            res.put("msg","No this item");
+            res.put("msg","No this list");
             return res.toString();
         }
 
@@ -126,13 +134,14 @@ public class ListController {
         String content = listitemModel.getContent();
         int listid = listitemModel.getListid();
         String locationid = listitemModel.getLocationid();
-        if(listItemService.getListItemDTOByContent(content) == null) {
+//        if(listItemService.getListItemDTOByContent(content) == null) {
             listItemService.createListitem(content, listid, locationid);
             List<? extends ListItemDTO> listitems = listItemService.getListItemDTOByListid(listid);
             JSONObject temp = new JSONObject();
             temp.put("data", listitems);
             temp.put("status", 200);
-            if(locationid!=""&&locationService.getLocationbyId(locationid)==null){
+            System.out.println(locationid);
+            if(locationid!=null&&locationService.getLocationbyId(locationid)==null){
                 JSONObject details = getLocationDetail(locationid);
                 if(details!=null && !details.has("error_message")){
                     JSONObject result = (JSONObject) details.get("result");
@@ -142,16 +151,17 @@ public class ListController {
                     locationService.newLocation(locationid,formatted_address,coord);
                 }else{
                     temp.put("status", 201);
+                    temp.put("msg","location search exceeded google limits");
                 }
             }
             temp.put("locations",locationService.getAllLocations());
             return temp.toString();
-        }else{
-            JSONObject temp = new JSONObject();
-            temp.put("status", 500);
-            temp.put("data", "this content already exists");
-            return temp.toString();
-        }
+//        }else{
+//            JSONObject temp = new JSONObject();
+//            temp.put("status", 500);
+//            temp.put("data", "this content already exists");
+//            return temp.toString();
+//        }
 
     }
 
@@ -205,7 +215,7 @@ public class ListController {
             res.put("data",listitems);
             res.put("listid",listid);
             res.put("status",200);
-            if(locationid!=""&&locationService.getLocationbyId(locationid)==null){
+            if(locationid!=null&&locationService.getLocationbyId(locationid)==null){
                 JSONObject details = getLocationDetail(locationid);
                 if(details!=null && !details.has("error_message")){
                     JSONObject result = (JSONObject) details.get("result");
@@ -215,6 +225,7 @@ public class ListController {
                     locationService.newLocation(locationid,formatted_address,coord);
                 }else{
                     res.put("status", 201);
+                    res.put("msg","location search exceeded google limits");
                 }
             }
             res.put("locations",locationService.getAllLocations());

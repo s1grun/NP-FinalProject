@@ -108,3 +108,21 @@ AjaxRequests.prototype.deleteItem= function(req,successCallback,failCallback){
             failCallback(data,state)}
     })
 };
+
+
+AjaxRequests.prototype.deleteList= function(req,successCallback,failCallback){
+    successCallback = typeof successCallback === 'function'?successCallback:new Function();
+    failCallback = typeof failCallback === 'function'?failCallback:new Function();
+
+    $.ajax({
+        url:'http://localhost:8080/deleteList',
+        type:'post',
+        data:JSON.stringify(req),
+        contentType: "application/json;charset=utf-8",
+        // dataType:"JSON",
+        success:function(data,state){
+            successCallback(JSON.parse(data) ,state)},
+        error:function(data,state){
+            failCallback(data,state)}
+    })
+};

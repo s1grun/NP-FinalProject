@@ -25,15 +25,23 @@ var global_Items={
 };
 var locations={};
 
+
 var USERID = $.cookie('userid');
 var USERNAME = $.cookie('username');
 
+function logout(){
+    $.removeCookie('userid', { path: '/' });
+    $.removeCookie('username', { path: '/' });
+    window.location.href = 'login.html';
+}
 
 
 $(document).ready(function(){
-    if(USERID==undefined || USERNAME==undefined){
+
+    if(USERID==undefined || USERNAME==undefined || USERNAME==null || USERID==null ){
         window.location.href = 'login.html';
     }
+    document.getElementById("username").innerText = USERNAME;
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems, {'onCloseStart':function () {
         document.getElementById('location_form').innerHTML='';
@@ -80,7 +88,7 @@ function render_list(oneList){
     var listname = oneList.listname;
     var listid = oneList.listid;
     var col_list = document.getElementById('scroll-list');
-    col_list.innerHTML+=`<li class="nav-item">
+    col_list.innerHTML+=`<li class="nav-item" id="nav_${listid}">
                                 <a class="nav-link" href="#_${listid}">${listname}</a>
                             </li>`;
     var col_content = document.getElementById('todo-content');
@@ -89,7 +97,9 @@ function render_list(oneList){
     // new_node.id=listid;
     new_node.className = 'list-box';
     new_node.innerHTML =`<div id="_${listid}" class="list-box">
-                                    <h3>${listname}</h3>
+                                    <h3>${listname}</h3><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   onclick="deleteList('${listid}')">
+                                                        delete
+                                                    </button>
                                     <div class="row">
                                         <!--to do part-->
                                         <div class="col">
@@ -163,6 +173,30 @@ function renderOneListItems(oneList) {
     doneDiv.innerHTML = doneHtml;
 }
 
+function deleteList(listid) {
+    new AjaxRequests().deleteList({listid:listid},function (data,state) {
+        console.log(data,state);
+        if(data.status!=500){
+            M.toast({html: '<p style="color:blue">delete '+data.msg+'</p>'});
+            document.getElementById("_"+listid).parentNode.style.display="none";
+            document.getElementById("nav_"+listid).style.display="none";
+
+            for(var it in global_Items){
+                if(it.listid == listid){
+                    delete global_Items[it];
+                }
+            }
+            refresh_map();
+        }else{
+            M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
+        }
+    },function (data,state) {
+        console.log(data,state);
+        M.toast({html: '<p style="color:red"> No internet connection!</p>'});
+    })
+}
+
+
 
 function taggleTODO(_id){
     
@@ -218,7 +252,7 @@ window.onload=function () {
                if(data.status!=500){
                    var listid = data.listid;
                    var col_list = document.getElementById('scroll-list');
-                   col_list.innerHTML+=`<li class="nav-item">
+                   col_list.innerHTML+=`<li class="nav-item" id="nav_${listid}">
                                         <a class="nav-link" href="#_${listid}">${listname}</a>
                                     </li>`;
                    var col_content = document.getElementById('todo-content');
@@ -227,7 +261,9 @@ window.onload=function () {
                    // new_node.id=listid;
                    new_node.className = 'list-box';
                    new_node.innerHTML =`<div id="_${listid}" class="list-box">
-                                    <h3>${listname}</h3>
+                                    <h3>${listname}</h3><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"   onclick="deleteList('${listid}')">
+                                                        delete
+                                                    </button>
                                     <div class="row">
                                         <!--to do part-->
                                         <div class="col">
@@ -322,6 +358,7 @@ function ConfirmEdit() {
             });
             renderOneListItems({listid:data.listid,items:data.data});
             global_Items[EditingItemId] = newItem;
+            refresh_map();
         }else{
             M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
 
@@ -343,7 +380,7 @@ function deleteItem() {
             M.toast({html: '<p style="color:blue">delete '+data.msg+'</p>'});
             document.getElementById("item"+EditingItemId).style.display="none";
             delete global_Items[EditingItemId];
-
+            refresh_map();
         }else{
             M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
         }
@@ -381,6 +418,7 @@ function AddItem() {
             data.data.map((item,index)=>{
                 global_Items[item.itemid] = item;
             })
+            refresh_map();
         }else{
             $('.modal').modal('close');
             M.toast({html: '<p style="color:red">'+data.data+'</p>'})

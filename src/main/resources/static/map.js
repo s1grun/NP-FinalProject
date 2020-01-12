@@ -106,6 +106,7 @@ function init_smallmap(center_location) {
     return map;
 }
 
+var markers=[];
 function mark_map_location(map,locationid,content){
     var infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
@@ -115,6 +116,7 @@ function mark_map_location(map,locationid,content){
             map: map,
             position: JSON.parse(locations[locationid].coord)
         });
+        markers.push(marker);
         google.maps.event.addListener(marker, 'click', function() {
             infowindow.setContent('<div><strong>' + 'content: '+content + '</strong><br>' +
 
@@ -128,6 +130,10 @@ function mark_map_location(map,locationid,content){
 }
 
 function refresh_map(){
+    markers.map((item,ind)=>{
+        item.setMap(null);
+    });
+    markers =[];
     if(global_map!=null){
         var index =0;
         for (var id in global_Items){
@@ -139,7 +145,7 @@ function refresh_map(){
             (function(ind, it){
                 setTimeout(function(){
                     mark_map_location(global_map,it.locationid,it.content)
-                },500*ind)
+                },100*ind)
             })(index,item)
             index+=1;
         }
