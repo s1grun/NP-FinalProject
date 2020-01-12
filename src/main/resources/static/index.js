@@ -23,23 +23,27 @@ var global_Items={
         "status":1
     }
 };
+var locations={};
 
-var USERID = 2;
-var USERNAME = "aaa";
+var USERID = $.cookie('userid');
+var USERNAME = $.cookie('username');
 
 
 
 $(document).ready(function(){
+    if(USERID==undefined || USERNAME==undefined){
+        window.location.href = 'login.html';
+    }
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems, {'onCloseStart':function () {
         document.getElementById('location_form').innerHTML='';
         document.getElementById('content').value='';
         document.getElementById('location').value='';
-        document.getElementById('assignee').value='';
+        // document.getElementById('assignee').value='';
         document.getElementById('location_form2').innerHTML='';
         document.getElementById('content2').value='';
         document.getElementById('location2').value='';
-        document.getElementById('assignee2').value='';
+        // document.getElementById('assignee2').value='';
         document.getElementById('status').value='';
         var EditingTableId =null;
         var AddingLocation = null;
@@ -48,15 +52,20 @@ $(document).ready(function(){
     // $('.modal').modal('onCloseStart',);
 
     new AjaxRequests().getAlLists(USERID,function (data,state) {
-        data.map((item,index)=>{
-            item.items.map((it,ind)=>{
-                global_Items[it.itemid] = it;
-                
+        if(data.status==200){
+            data.locations.map((it,id)=>{
+                locations[it.locationid]=it;
+            });
+            data.data.map((item,index)=>{
+                item.items.map((it,ind)=>{
+                    global_Items[it.itemid] = it;
+                });
+                render_list(item);
             })
-            render_list(item);
-        })
-        
-        refresh_map();
+
+            refresh_map();
+        }
+
         console.log(data,state);
     },function (data,state) {
         console.log(data,state);
@@ -77,7 +86,7 @@ function render_list(oneList){
     var col_content = document.getElementById('todo-content');
 
     var new_node = document.createElement('div');
-    new_node.id=listid;
+    // new_node.id=listid;
     new_node.className = 'list-box';
     new_node.innerHTML =`<div id="_${listid}" class="list-box">
                                     <h3>${listname}</h3>
@@ -113,7 +122,16 @@ function render_list(oneList){
 
     // componentHandler.upgradeDom(new_node);
     col_content.appendChild(new_node);
+
+    renderOneListItems(oneList);
     
+    // componentHandler.upgradeDom(new_node);
+
+}
+
+
+function renderOneListItems(oneList) {
+    var listid = oneList.listid;
     var todoDiv = document.getElementById(`${listid}-todo`);
     var todoHtml = '';
     var doneDiv = document.getElementById(`${listid}-done`);
@@ -121,33 +139,29 @@ function render_list(oneList){
     oneList.items.map((it,ind)=>{
         // console.log(it.status);
         if(it.status==0){
-            todoHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
+            todoHtml+=`<div class="todo-content mdl-card--border" id="item${it.itemid}">
             <label>
                 <input type="checkbox" />
                 <span class="black-text" onclick="taggleTODO('${it.itemid}')">${it.content}</span><br>
             </label><br>
-            <span style="display: inline-block;width: 70%;">location:</span>
+            ${it.locationid!=undefined && locations[it.locationid]!=undefined?'<span style="display: inline-block;width: 70%; overflow: hidden">location:'+ locations[it.locationid].name +'</span>':''}
             <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
         </div>`
         }else{
-            doneHtml+=`<div class="todo-content mdl-card--border" id="${it.itemid}">
+            doneHtml+=`<div class="todo-content mdl-card--border" id="item${it.itemid}">
             <label>
                 <input type="checkbox" checked/>
                 <span class="black-text" onclick="taggleTODO('${it.itemid}')">${it.content}</span><br>
             </label><br>
-            <span style="display: inline-block;width: 70%;">location:</span>
+           ${it.locationid!=undefined && locations[it.locationid]!=undefined?'<span style="display: inline-block;width: 70%; overflow: hidden">location:'+ locations[it.locationid].name +'</span>':''}
             <span href="#!" class="waves-effect waves-green btn-flat modal-trigger" data-target="edit-modal" onclick="EditItem('${it.itemid}')">Edit</span>
         </div>`;
         }
-        
+
     });
     todoDiv.innerHTML = todoHtml;
     doneDiv.innerHTML = doneHtml;
-    
-    // componentHandler.upgradeDom(new_node);
-
 }
-
 
 
 function taggleTODO(_id){
@@ -161,9 +175,21 @@ function taggleTODO(_id){
 
     new AjaxRequests().updateItem(global_Items[_id],function(data,state){
         console.log(data,state);
+        if(data.status!=500){
+            data.locations.map((it,id)=>{
+                locations[it.locationid]=it;
+            });
+            renderOneListItems({listid:data.listid,items:data.data});
+        }else{
+            M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
+            global_Items[_id].status = state0;
+        }
+
+
     },function(data,state){
         console.log(data,state);
         global_Items[_id].status = state0;
+        M.toast({html: '<p style="color:red">Oooops! Please connect to internet</p>'})
     })
 }
 
@@ -189,7 +215,7 @@ window.onload=function () {
            new AjaxRequests().addList({listname:listname, owner:USERID},function (data,state) {
                console.log(data,data.status);
                dialog.close();
-               if(data.status==200){
+               if(data.status!=500){
                    var listid = data.listid;
                    var col_list = document.getElementById('scroll-list');
                    col_list.innerHTML+=`<li class="nav-item">
@@ -198,7 +224,7 @@ window.onload=function () {
                    var col_content = document.getElementById('todo-content');
 
                    var new_node = document.createElement('div');
-                   new_node.id=listid;
+                   // new_node.id=listid;
                    new_node.className = 'list-box';
                    new_node.innerHTML =`<div id="_${listid}" class="list-box">
                                     <h3>${listname}</h3>
@@ -239,6 +265,7 @@ window.onload=function () {
                }else{
                    M.toast({html: '<p style="color:blue">Listname already exists</p>'})
                }
+
            },function (data,state) {
                console.log(data,state);
                dialog.close();
@@ -269,8 +296,8 @@ function EditItem(itemId) {
             var it = global_Items[id];
             document.getElementById('content2').value = it.content;
             document.getElementById('status').value = it.status;
-            document.getElementById('location2').value = it.location;
-            document.getElementById('assignee2').value = it.assignee;
+            document.getElementById('location2').value = locations[it.locationid] == undefined?"":locations[it.locationid].name ;
+
             M.updateTextFields();
             break;
         }
@@ -278,24 +305,89 @@ function EditItem(itemId) {
 }
 
 function ConfirmEdit() {
+    var newItem = JSON.parse(JSON.stringify(global_Items[EditingItemId]));
+
+    if(AddingLocation!=null){
+        newItem.locationid =AddingLocation.locationid;
+    }
+    newItem.status = document.getElementById("status").value;
+    newItem.content = document.getElementById("content2").value;
+
+
+    new AjaxRequests().updateItem(newItem,function(data,state){
+        console.log(data,state);
+        if(data.status!=500){
+            data.locations.map((it,id)=>{
+                locations[it.locationid]=it;
+            });
+            renderOneListItems({listid:data.listid,items:data.data});
+            global_Items[EditingItemId] = newItem;
+        }else{
+            M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
+
+        }
+
+    },function(data,state){
+        console.log(data,state);
+        M.toast({html: '<p style="color:red">Oooops! Please connect to internet</p>'})
+    });
+    AddingLocation=null;
+    $('.modal').modal('close');
 
 }
+
+function deleteItem() {
+    new AjaxRequests().deleteItem({itemid: parseInt(EditingItemId)},function(data,state){
+        console.log(data,state);
+        if(data.status!=500){
+            M.toast({html: '<p style="color:blue">delete '+data.msg+'</p>'});
+            document.getElementById("item"+EditingItemId).style.display="none";
+            delete global_Items[EditingItemId];
+
+        }else{
+            M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
+        }
+    },function(data,state){
+        console.log(data,state);
+        M.toast({html: '<p style="color:red">Oooops! Please connect to internet</p>'})
+    });
+    AddingLocation=null;
+    $('.modal').modal('close');
+}
+
+
 
 function AddItem() {
     var tid = EditingTableId;
     var req = {
         "listid":tid,
         "content":document.getElementById("content").value,
-        "location":AddingLocation.location,
-        "locationid":AddingLocation.locationid,
-        "assignee":document.getElementById("assignee").value,
+
+        // "assignee":document.getElementById("assignee").value,
         "status":0
+    };
+    if(AddingLocation!=null){
+        req.locationid = AddingLocation.locationid;
     }
     new AjaxRequests().addItem(req,function(data,state){
         console.log(data,state);
         $('.modal').modal('close');
+        if(data.status==200){
+            data.locations.map((it,id)=>{
+                locations[it.locationid]=it;
+            });
+            renderOneListItems({listid:tid,items:data.data});
+            AddingLocation = null;
+            data.data.map((item,index)=>{
+                global_Items[item.itemid] = item;
+            })
+        }else{
+            $('.modal').modal('close');
+            M.toast({html: '<p style="color:red">'+data.data+'</p>'})
+        }
     },function (data,state) {
         console.log(data,state);
+        M.toast({html: '<p style="color:red">Oooops! Please connect to internet</p>'})
     })
 
 }

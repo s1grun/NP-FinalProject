@@ -20,6 +20,9 @@ public class LocationService {
 
         return locationRepository.getLocationEntityByLocationid(locationid);
     }
+    public List<? extends LocationDTO> getAllLocations(){
+        return locationRepository.findAll();
+    }
 
     public LocationEntity newLocation(String locationid, String name, String coord){
         return locationRepository.save(new LocationEntity(locationid, name, coord));

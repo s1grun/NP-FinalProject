@@ -6,21 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>login</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
     <script src="network.js"></script>
 </head>
 <body>
-    <input type="text" name="username" id="username">
-    <input type="password" name="password" id="password">
+    <input type="text" name="username" id="username" placeholder="username">
+    <input type="password" name="password" id="password" placeholder="password">
+    <button onclick="login()">login</button>
 </body>
 <script>
-    var username = document.getElementById('username');
-    var password = document.getElementById('password');
-    new AjaxRequests().login({username,password},function(data,state){
-        console.log(data,state)
-    },function(){
-        console.log('net work err');
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        new AjaxRequests().login({username,password},function(data,state){
+                console.log(data,state);
+                if(data.status==200){
+                    $.cookie('username',data.username,{ path: '/' });
+                    $.cookie('userid',data.userid,{ path: '/' });
+                    window.location.href='/';
+                }else{
+                    alert('username or password is not correct');
+                }
+            },function(){
+                alert('net work err');
+            }
+        )
     }
-    )
+
 
 </script>
 </html>

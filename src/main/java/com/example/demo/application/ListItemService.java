@@ -28,9 +28,9 @@ public class ListItemService {
         return listItemRepository.getByContent(content);
     }
 
-    public ListitemEntity createListitem(String content, int listid){
+    public ListitemEntity createListitem(String content, int listid, String locationid){
         System.out.println("content" + content);
-        return listItemRepository.save(new ListitemEntity(content, listid));
+        return listItemRepository.save(new ListitemEntity(content, listid, locationid));
     }
 
     public ListItemDTO findListitemByItemid(int itemid) {
@@ -41,7 +41,7 @@ public class ListItemService {
         return listItemRepository.save(listItem);
     }
 
-    public ListitemEntity deleteListitem(ListitemEntity itemid) {
-        return (ListitemEntity) listItemRepository.deleteByItemid(itemid);
+    public int deleteListitem(int itemid) {
+        return  listItemRepository.deleteByItemid(itemid);
     }
 }

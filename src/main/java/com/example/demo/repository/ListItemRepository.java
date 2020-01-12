@@ -17,5 +17,5 @@ public interface ListItemRepository extends JpaRepository<ListitemEntity, List> 
     ListItemDTO getByContent(String content);
     ListItemDTO getByItemid(int itemid);
     ListItemDTO findByItemid(int itemid);
-    ListItemDTO deleteByItemid(ListitemEntity itemid);
+    int deleteByItemid(int itemid);
 }

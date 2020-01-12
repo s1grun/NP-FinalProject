@@ -58,21 +58,28 @@ function bindInput(inputid,formid) {
         var timer = setTimeout(function () {
 
             input_option.input = input.value;
-            autocomplete.getPlacePredictions(input_option, function(res){
-                if(res != null){
-                    AddingLocation = null;
-                    var location_list = document.getElementById(formid);
-                    location_list.innerHTML ='';
-                    res.map(function(item,index){
-                        location_list.innerHTML+=`<p>
+            if(input_option.input!=''){
+                autocomplete.getPlacePredictions(input_option, function(res){
+                    if(res != null){
+                        AddingLocation = null;
+                        var location_list = document.getElementById(formid);
+                        location_list.innerHTML ='';
+                        res.map(function(item,index){
+                            location_list.innerHTML+=`<p>
                     <label>
                         <input  value="${item.place_id}" class="with-gap" name="location_value" type="radio" onclick="clickRadio('${item.place_id}','${item.description}')"/>
                         <span>${item.description}</span>
                     </label>
                 </p>`;
-                    })
-                }
-            });
+                        })
+                    }
+                });
+            }else{
+                var location_list = document.getElementById(formid);
+                location_list.innerHTML ='';
+                AddingLocation = null;
+            }
+
             next_search=true;
         },3000);
 
@@ -99,23 +106,25 @@ function init_smallmap(center_location) {
     return map;
 }
 
-function mark_map_location(map,request,content){
+function mark_map_location(map,locationid,content){
     var infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
-    service.getDetails(request, function(place, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          var marker = new google.maps.Marker({
+
+    if(locationid!=""&&locationid!==undefined&&locations[locationid]!=undefined){
+        var marker = new google.maps.Marker({
             map: map,
-            position: place.geometry.location
-          });
-          google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-              'Place ID: ' + place.place_id + '<br>' + 'content:'+content+'<br>'+
-              place.formatted_address + '</div>');
+            position: JSON.parse(locations[locationid].coord)
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent('<div><strong>' + 'content: '+content + '</strong><br>' +
+
+                locations[locationid].name + '</div>');
             infowindow.open(map, this);
-          });
-        }
-    });
+        });
+    }
+
+
+
 }
 
 function refresh_map(){
@@ -123,15 +132,15 @@ function refresh_map(){
         var index =0;
         for (var id in global_Items){
             var item = global_Items[id];
-            var req={
-                placeId :item.locationid,
-                fields: ['name', 'formatted_address', 'place_id', 'geometry']
-            };
-            (function(req,ind, content){
+            // var req={
+            //     placeId :item.locationid,
+            //     fields: ['name', 'formatted_address', 'place_id', 'geometry']
+            // };
+            (function(ind, it){
                 setTimeout(function(){
-                    mark_map_location(global_map,req,content)
-                },2000*ind)
-            })(req,index,item.content)
+                    mark_map_location(global_map,it.locationid,it.content)
+                },500*ind)
+            })(index,item)
             index+=1;
         }
         

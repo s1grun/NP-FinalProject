@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Todo</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-yellow.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -266,10 +268,10 @@
             <input id="content" type="text" class="validate">
             <label for="content">TODO content</label>
         </div>
-        <div class="input-field col s6">
-            <input id="assignee" type="text" class="validate">
-            <label for="assignee">assignee</label>
-        </div>
+<!--        <div class="input-field col s6">-->
+<!--            <input id="assignee" type="text" class="validate">-->
+<!--            <label for="assignee">assignee</label>-->
+<!--        </div>-->
         <div class="input-field col s6">
             <input id="location" type="text" class="validate">
             <label for="location">location</label>
@@ -297,10 +299,10 @@
             <input id="content2" type="text" class="validate">
             <label class="active"  for="content2">TODO content</label>
         </div>
-        <div class="input-field col s6">
-            <input id="assignee2" type="text" class="validate">
-            <label class="active"  for="assignee2">assignee</label>
-        </div>
+<!--        <div class="input-field col s6">-->
+<!--            <input id="assignee2" type="text" class="validate">-->
+<!--            <label class="active"  for="assignee2">assignee</label>-->
+<!--        </div>-->
 
         <div class="input-field col s6">
             <input id="status" type="number" class="validate">
@@ -310,13 +312,14 @@
             <input id="location2" type="text" class="validate">
             <label class="active" for="location2">location</label>
         </div>
-        <div id="location-list2" style="width: 100%;height: 80px;overflow: auto">
+        <div id="location-list2" style="width: 100%;height: 150px;overflow: auto">
             <form action="#" id="location_form2">
 
             </form>
         </div>
     </div>
     <div class="modal-footer">
+        <span href="#!" class="waves-effect waves-green btn-flat left-button" style="color: darkred" onclick="deleteItem()">Delete</span>
         <span href="#!" class="modal-close waves-effect waves-red btn-flat" style="color: orangered">Cancel</span>
         <span href="#!" class="waves-effect waves-green btn-flat" onclick="ConfirmEdit()">Confirm</span>
     </div>

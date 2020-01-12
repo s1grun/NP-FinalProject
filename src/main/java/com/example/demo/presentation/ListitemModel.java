@@ -7,6 +7,7 @@ public class ListitemModel {
     private int status;
     private String assignee;
     private int listid;
+    private String locationid;
 
     public String getContent() {
         return content;
@@ -43,4 +44,12 @@ public class ListitemModel {
     public int getListid() {return listid; }
 
     public void setListid(int listid) { this.listid = listid; }
+
+    public String getLocationid() {
+        return locationid;
+    }
+
+    public void setLocationid(String locationid) {
+        this.locationid = locationid;
+    }
 }

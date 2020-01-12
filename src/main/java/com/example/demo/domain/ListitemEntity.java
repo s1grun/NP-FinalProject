@@ -14,9 +14,10 @@ public class ListitemEntity implements ListItemDTO{
     private String locationid;
     private String location;
 
-    public ListitemEntity(String content, int listid) {
+    public ListitemEntity(String content, int listid, String locationid) {
         this.content = content;
         this.listid = listid;
+        this.locationid = locationid;
     }
 
     public ListitemEntity() {

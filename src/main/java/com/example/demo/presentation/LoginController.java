@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 
-@SessionAttributes("user")
+//@SessionAttributes("user")
 @RestController
 public class LoginController {
     @Autowired
@@ -53,6 +53,7 @@ public class LoginController {
             String userid = loggedInUser.getUserId();
             res.put("status", 200);
             res.put("userid", userid);
+            res.put("username",username);
 //            res.put("token", jws);
             return res.toString();
         } catch (Exception ex) {

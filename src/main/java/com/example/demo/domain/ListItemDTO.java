@@ -8,5 +8,7 @@ public interface ListItemDTO {
     void setContent(String content);
     void setStatus(int status);
     void setAssignee(String assignee);
+    void setLocationid(String locationid);
+
 
 }

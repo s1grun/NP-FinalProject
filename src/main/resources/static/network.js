@@ -67,7 +67,7 @@ AjaxRequests.prototype.addItem= function(req,successCallback,failCallback){
         contentType: "application/json; charset=utf-8",
         // dataType:"JSON",
         success:function(data,state){
-            successCallback(JSON.parse(JSON.stringify(data) ) ,state)},
+            successCallback(JSON.parse(data ) ,state)},
         error:function(data,state){
             failCallback(data,state)}
     })
@@ -80,6 +80,24 @@ AjaxRequests.prototype.addList= function(req,successCallback,failCallback){
     
     $.ajax({
         url:'http://localhost:8080/addList',
+        type:'post',
+        data:JSON.stringify(req),
+        contentType: "application/json;charset=utf-8",
+        // dataType:"JSON",
+        success:function(data,state){
+            successCallback(JSON.parse(data) ,state)},
+        error:function(data,state){
+            failCallback(data,state)}
+    })
+};
+
+
+AjaxRequests.prototype.deleteItem= function(req,successCallback,failCallback){
+    successCallback = typeof successCallback === 'function'?successCallback:new Function();
+    failCallback = typeof failCallback === 'function'?failCallback:new Function();
+
+    $.ajax({
+        url:'http://localhost:8080/deleteListItem',
         type:'post',
         data:JSON.stringify(req),
         contentType: "application/json;charset=utf-8",
