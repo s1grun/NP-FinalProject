@@ -1,5 +1,6 @@
 package com.example.demo.presentation;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -43,11 +44,10 @@ class ListControllerTest {
         List<ListsModel> allLists = singletonList(listsModel);
 
         JSONObject res = new JSONObject();
-        res.put("data", allLists.toString() );
+        System.out.println(new JSONArray(allLists) );
+        res.put("data", new JSONArray(allLists).toString() );
         res.put("status",200);
 //        res.put("locations",locationService.getAllLocations());
-
-
 
         given(listController.getLists(listsModel.getOwner())).willReturn( res.toString() );
 
