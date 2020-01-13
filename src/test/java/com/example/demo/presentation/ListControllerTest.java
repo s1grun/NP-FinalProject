@@ -1,5 +1,6 @@
 package com.example.demo.presentation;
 
+import com.example.demo.application.ListItemService;
 import com.example.demo.domain.ListDTO;
 import com.example.demo.domain.ListEntity;
 import org.json.JSONArray;
@@ -123,17 +124,57 @@ class ListControllerTest {
 
     @Test
     void getListItems() {
+        ListItemService listItemService = new ListItemService();
+
     }
 
     @Test
-    void newListItem() {
+    void newListItem() throws Exception {
+        ListitemModel listitemModel = new ListitemModel();
+        listitemModel.setListid(4);
+        listitemModel.setContent("content");
+
+        MvcResult result= mockMvc.perform(post("/addListItem")
+                        .contentType(APPLICATION_JSON)
+                        .accept(TEXT_PLAIN)
+                        .content("{\"content\":\"content\",\"listid\":\"4\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        String str = result.getResponse().getContentAsString();
+        System.out.println(str);
+        assertThat(new JSONObject(str).get("status")).isEqualTo(200);
     }
 
     @Test
-    void updateListItem() {
+    void updateListItem() throws Exception {
+        ListitemModel listitemModel = new ListitemModel();
+        listitemModel.setItemid(5);
+        listitemModel.setStatus(1);
+        listitemModel.setContent("update content");
+
+        MvcResult result= mockMvc.perform(post("/updateListItem")
+                .contentType(APPLICATION_JSON)
+                .accept(TEXT_PLAIN)
+                .content("{\"content\":\"update content\",\"status\":\"1\",\"itemid\":\"5\"}"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        String str = result.getResponse().getContentAsString();
+        System.out.println(str);
+        assertThat(new JSONObject(str).get("status")).isEqualTo(200);
     }
 
     @Test
-    void deleteListItem() {
+    void deleteListItem() throws Exception {
+        MvcResult result = mockMvc.perform(post("/deleteListItem")
+                        .contentType(APPLICATION_JSON)
+                        .accept(TEXT_PLAIN)
+                        .content("{\"listitemid\":\"52\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
     }
 }
