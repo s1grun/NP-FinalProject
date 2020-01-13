@@ -15,15 +15,15 @@
     <input type="text" name="username" id="username" placeholder="username">
     <input type="password" name="password" id="password" placeholder="password">
     <button onclick="login()">login</button>
-    <h3>login</h3>
+    <h3>register</h3>
     <input type="text" name="username" id="username2" placeholder="username">
     <input type="password" name="password" id="password2" placeholder="password">
-    <button onclick="login()">login</button>
+    <button onclick="register()">register</button>
 </body>
 <script>
     function login() {
-        var username = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value.trim();
         new AjaxRequests().login({username,password},function(data,state){
                 console.log(data,state);
                 if(data.status==200){
@@ -37,6 +37,28 @@
                 alert('net work err');
             }
         )
+    }
+
+
+    function register() {
+        var username = document.getElementById('username2').value.trim();
+        var password = document.getElementById('password2').value.trim();
+        if(username=="" || password==""){
+            alert('username or password cannot be empty');
+            return;
+        }else{
+            new AjaxRequests().register({username,password},function(data,state){
+                    console.log(data,state);
+                    if(data.status==200){
+                        alert('register successfully')
+                    }else{
+                        alert('username already exists');
+                    }
+                },function(){
+                    alert('net work err');
+                }
+            )
+        }
     }
 
 

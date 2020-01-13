@@ -7,21 +7,21 @@ var EditingTableId =null;
 var AddingLocation = null;
 var EditingItemId = null;
 var global_Items={
-    "test1":{
-        "itemid":"test1",
-        "content":"11111",
-        "locationid":"ChIJ_cZ_332dX0YR9GZKastWFTE",
-        "location":"Lidl, Sankt Göransgatan, 斯德哥尔摩瑞典",
-        "assignee":"",
-        "status":0
-    },"test2":{
-        "itemid":"test2",
-        "content":"2222222",
-        "location":"Lidl, Sveavägen, 斯德哥尔摩瑞典",
-        "locationid":"ChIJffRzumidX0YRCyHbBTn0_Ls",
-        "assignee":"",
-        "status":1
-    }
+    // "test1":{
+    //     "itemid":"test1",
+    //     "content":"11111",
+    //     "locationid":"ChIJ_cZ_332dX0YR9GZKastWFTE",
+    //     "location":"Lidl, Sankt Göransgatan, 斯德哥尔摩瑞典",
+    //     "assignee":"",
+    //     "status":0
+    // },"test2":{
+    //     "itemid":"test2",
+    //     "content":"2222222",
+    //     "location":"Lidl, Sveavägen, 斯德哥尔摩瑞典",
+    //     "locationid":"ChIJffRzumidX0YRCyHbBTn0_Ls",
+    //     "assignee":"",
+    //     "status":1
+    // }
 };
 var locations={};
 
@@ -349,7 +349,14 @@ function ConfirmEdit() {
     newItem.status = document.getElementById("status").value;
     newItem.content = document.getElementById("content2").value;
 
-
+    if(newItem.content.trim()==''){
+        M.toast({html: '<p style="color:red">Oooops! content cannot be empty</p>'});
+        return;
+    }
+    if(newItem.status!=0 &&newItem.status!=1 ){
+        M.toast({html: '<p style="color:red">status should be either 1 or 0</p>'});
+        return;
+    }
     new AjaxRequests().updateItem(newItem,function(data,state){
         console.log(data,state);
         if(data.status!=500){
@@ -359,6 +366,9 @@ function ConfirmEdit() {
             renderOneListItems({listid:data.listid,items:data.data});
             global_Items[EditingItemId] = newItem;
             refresh_map();
+            if(data.status==201){
+                M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
+            }
         }else{
             M.toast({html: '<p style="color:red">'+data.msg+'</p>'});
 
@@ -405,6 +415,10 @@ function AddItem() {
     };
     if(AddingLocation!=null){
         req.locationid = AddingLocation.locationid;
+    }
+    if(req.content.trim()==''){
+        M.toast({html: '<p style="color:red">Oooops! content cannot be empty</p>'});
+        return;
     }
     new AjaxRequests().addItem(req,function(data,state){
         console.log(data,state);

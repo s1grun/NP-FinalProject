@@ -1,5 +1,6 @@
 package com.example.demo.presentation;
 
+import com.alibaba.fastjson.JSON;
 import com.example.demo.application.ListItemService;
 import com.example.demo.application.ListService;
 import com.example.demo.application.LocationService;
@@ -41,7 +42,7 @@ public class ListController {
        for (int i = 0; i < allLists.size(); i++) {
            ListDTO item= allLists.get(i);
 //           System.out.println(item.toString());
-           JSONObject temp = new JSONObject(item);
+           JSONObject temp = new JSONObject(JSON.toJSONString(item) );
 //           System.out.println(temp.toString());
            List<? extends ListItemDTO> res =listItemService.getListItemDTOByListid(item.getListid());
            temp.put("items",res);
@@ -54,6 +55,12 @@ public class ListController {
        return  res.toString();
 
     }
+    @GetMapping("/test")
+    public String test() {
+
+        return "hello";
+    }
+
 
     @RequestMapping(value = "/addList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String newList(@RequestBody ListsModel listsModel) throws URISyntaxException {

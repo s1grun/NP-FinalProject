@@ -39,6 +39,24 @@ AjaxRequests.prototype.login= function(req,successCallback,failCallback){
 };
 
 
+AjaxRequests.prototype.register= function(req,successCallback,failCallback){
+    successCallback = typeof successCallback === 'function'?successCallback:new Function();
+    failCallback = typeof failCallback === 'function'?failCallback:new Function();
+
+    $.ajax({
+        url:'/register',
+        type:'POST',
+        contentType:'application/json',
+        dataType:"JSON",
+        data:JSON.stringify(req),
+        success:function(data,state){
+            successCallback(JSON.parse(JSON.stringify(data) ) ,state)},
+        error:function(data,state){
+            failCallback(data,state)}
+    })
+};
+
+
 AjaxRequests.prototype.updateItem= function(req,successCallback,failCallback){
     successCallback = typeof successCallback === 'function'?successCallback:new Function();
     failCallback = typeof failCallback === 'function'?failCallback:new Function();

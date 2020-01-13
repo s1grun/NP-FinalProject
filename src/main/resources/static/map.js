@@ -43,12 +43,12 @@ var next_search=true;
 function init_autocomplete(){
     var input = document.getElementById('location');
     var input2 = document.getElementById('location2');
-
+    getCurrentLocation();
     autocomplete = new google.maps.places.AutocompleteService();
 
     input.oninput = function(){bindInput('location','location_form')};
     input2.oninput = function(){bindInput('location2','location_form2')};
-    getCurrentLocation();
+
 }
 
 function bindInput(inputid,formid) {
