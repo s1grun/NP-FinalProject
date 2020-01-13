@@ -59,21 +59,36 @@ function bindInput(inputid,formid) {
 
             input_option.input = input.value;
             if(input_option.input!=''){
-                autocomplete.getPlacePredictions(input_option, function(res){
-                    if(res != null){
-                        AddingLocation = null;
-                        var location_list = document.getElementById(formid);
-                        location_list.innerHTML ='';
-                        res.map(function(item,index){
-                            location_list.innerHTML+=`<p>
+                try{
+                    autocomplete.getPlacePredictions(input_option, function(res,resStatus){
+                        if(resStatus=='ZERO_RESULTS'){
+                            M.toast({html: '<p style="color:red">'+"no result!"+'</p>'});
+                        }
+                        else if(resStatus!="OK"){
+                            M.toast({html: '<p style="color:red">'+"You have exceeded your daily request quota for this API."+'</p>'});
+                        }else{
+                            if(res != null){
+                                AddingLocation = null;
+                                var location_list = document.getElementById(formid);
+                                location_list.innerHTML ='';
+                                res.map(function(item,index){
+                                    location_list.innerHTML+=`<p>
                     <label>
                         <input  value="${item.place_id}" class="with-gap" name="location_value" type="radio" onclick="clickRadio('${item.place_id}','${item.description}')"/>
                         <span>${item.description}</span>
                     </label>
                 </p>`;
-                        })
-                    }
-                });
+                                })
+                            }
+                        }
+
+
+                    });
+
+                }catch (e) {
+                    M.toast({html: '<p style="color:red">'+e.toString()+'</p>'});
+                }
+
             }else{
                 var location_list = document.getElementById(formid);
                 location_list.innerHTML ='';
